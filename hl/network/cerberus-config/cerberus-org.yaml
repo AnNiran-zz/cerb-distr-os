@@ -1,0 +1,246 @@
+version: "2"
+volumes:
+  anchorpr.cerberusorg.cerberus.net: null
+  leadpr.cerberusorg.cerberus.net: null
+  communicatepr.cerberusorg.cerberus.net: null
+  execute0pr.cerberusorg.cerberus.net: null
+  execute1pr.cerberusorg.cerberus.net: null
+  fallback0pr.cerberusorg.cerberus.net: null
+  fallback1pr.cerberusorg.cerberus.net: null
+networks:
+  cerberusntw: null
+services:
+  anchorpr.cerberusorg.cerberus.net:
+    container_name: anchorpr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=anchorpr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=anchorpr.cerberusorg.cerberus.net:7052
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - anchorpr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10001:7051
+    - 10002:7052
+    - 10003:7053
+    networks:
+    - cerberusntw
+    extra_hosts:
+    - anchorpr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24
+    - lead0pr.sipher.cerberus.net:155.138.144.24
+    - lead1pr.sipher.cerberus.net:155.138.144.24
+  leadpr.cerberusorg.cerberus.net:
+    container_name: leadpr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=leadpr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=leadpr.cerberusorg.cerberus.net:10006
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10006
+    - CORE_PEER_GOSSIP_USELEADERELECTION=true
+    - CORE_PEER_GOSSIP_BOOTSTRAP=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - leadpr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10005:7051
+    - 10006:7052
+    - 10007:7053
+    networks:
+    - cerberusntw
+    extra_hosts:
+    - anchorpr.sipher.cerberus.net:155.138.144.24
+    - lead0pr.sipher.cerberus.net:155.138.144.24
+    - lead1pr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24
+  communicatepr.cerberusorg.cerberus.net:
+    container_name: communicatepr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=communicatepr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=communicatepr.cerberusorg.cerberus.net:10010
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10010
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/communicatepr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/communicatepr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - communicatepr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10009:7051
+    - 10010:7052
+    - 10011:7053
+    networks:
+    - cerberusntw
+    extra_hosts:
+    - anchorpr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24
+    - lead0pr.sipher.cerberus.net:155.138.144.24
+    - lead1pr.sipher.cerberus.net:155.138.144.24
+  execute0pr.cerberusorg.cerberus.net:
+    container_name: execute0pr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=execute0pr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=execute0pr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=execute0pr.cerberusorg.cerberus.net:10014
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10014
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/execute0pr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/execute0pr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - execute0pr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10013:7051
+    - 10014:7052
+    - 10015:7053
+    networks:
+    - cerberusntw
+  execute1pr.cerberusorg.cerberus.net:
+    container_name: execute1pr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=execute1pr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=execute1pr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=execute1pr.cerberusorg.cerberus.net:10018
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10018
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/execute1pr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/execute1pr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - execute1pr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10017:7051
+    - 10018:7052
+    - 10019:7053
+    networks:
+    - cerberusntw
+  fallback0pr.cerberusorg.cerberus.net:
+    container_name: fallback0pr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=fallback0pr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=fallback0pr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=fallback0pr.cerberusorg.cerberus.net:10022
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10022
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/fallback0pr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/fallback0pr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - fallback0pr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10021:7051
+    - 10022:7052
+    - 10023:7053
+    networks:
+    - cerberusntw
+  fallback1pr.cerberusorg.cerberus.net:
+    container_name: fallback1pr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=fallback1pr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=fallback1pr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=fallback1pr.cerberusorg.cerberus.net:10026
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10026
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/fallback1pr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/fallback1pr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - fallback1pr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10025:7051
+    - 10026:7052
+    - 10027:7053
+    networks:
+    - cerberusntw
+  cli.cerberusorg.cerberus.net:
+    container_name: cli.cerberusorg.cerberus.net
+    image: hyperledger/fabric-tools:$IMAGE_TAG
+    tty: true
+    stdin_open: true
+    environment:
+    - GOPATH=/opt/gopath
+    - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    - FABRIC_LOGGING_SPEC=INFO
+    - CORE_PEER_ID=cli.cerberus.net
+    - CORE_PEER_ADDRESS=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    - CORE_PEER_TLS_ENABLED=true
+    - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/tls/server.crt
+    - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/tls/server.key
+    - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/tls/ca.crt
+    - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/users/Admin@cerberusorg.cerberus.net/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../../../chaincode/:/opt/gopath/src/github.com/chaincode
+    - ../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+    - ../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+    - ../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+    - anchorpr.cerberusorg.cerberus.net
+    - leadpr.cerberusorg.cerberus.net
+    - communicatepr.cerberusorg.cerberus.net
+    - execute0pr.cerberusorg.cerberus.net
+    - execute1pr.cerberusorg.cerberus.net
+    - fallback0pr.cerberusorg.cerberus.net
+    - fallback1pr.cerberusorg.cerberus.net
+    networks:
+    - cerberusntw
+    extra_hosts:
+    - anchorpr.sipher.cerberus.net:155.138.144.24
+    - lead0pr.sipher.cerberus.net:155.138.144.24
+    - lead1pr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24

@@ -1,0 +1,39 @@
+{
+	"label": "sipher",
+	"containers":  [
+		{
+			"name": "anchorpr",
+			"container": "anchorpr.sipher.cerberus.net",
+			"host": "155.138.144.24",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "lead0pr",
+			"container": "lead0pr.sipher.cerberus.net",
+			"host": "155.138.144.24",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "lead1pr",
+			"container": "lead1pr.sipher.cerberus.net",
+			"host": "155.138.144.24",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "communicatepr",
+			"container": "communicatepr.sipher.cerberus.net",
+			"host": "155.138.144.24",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		}
+	]
+
+}
+

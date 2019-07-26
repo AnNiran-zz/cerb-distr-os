@@ -1,0 +1,96 @@
+{
+  "organizations": [
+    {
+      "org": {
+	"label": "cerberusorg",
+        "name": "CerberusOrg",
+        "host": "159.203.35.156",
+        "username": "anniran",
+        "password": "9anna8925lva",
+	"path": "/home/anniran/server/go/src/cerberus-os/",
+        "channels": [
+          {
+            "channel": "personaccountsch"
+          },
+          {
+            "channel": "institutionaccountsch"
+          },
+          {
+            "channel": "integrationaccountsch"
+          }
+        ],
+        "containers": [
+          {
+            "container": "anchorpr.cerberusorg.cerberus.net"
+          },
+          {
+            "container": "leadpr.cerberusorg.cerberus.net"
+          },
+          {
+            "container": "communicatepr.cerberusorg.cerberus.net"
+          }
+        ]
+      }
+    },
+    {
+      "org": {
+	"label": "whitebox",
+        "name": "WhiteBox",
+        "host": "149.28.196.252",
+        "username": "anniran",
+        "password": "9anna8925lva",
+	"path": "/home/anniran/server/go/src/cerberus/",
+        "channels": [
+          {
+            "channel": "personaccountsch"
+          },
+          {
+            "channel": "institutionaccountsch"
+          },
+          {
+            "channel": "integrationaccountsch"
+          }
+        ],
+        "containers": [
+          {
+            "container": "anchorpr.whitebox.cerberus.net"
+          },
+          {
+            "container": "lead0pr.whitebox.cerberus.net"
+          },
+          {
+            "container": "lead1pr.whitebox.cerberus.net"
+          },
+          {
+            "container": "communicatepr.whitebox.cerberus.net"
+          }
+        ]
+      }
+    },
+    {
+      "org": {
+	"label": "sipher",
+        "name": "Sipher",
+        "host": "155.138.144.24",
+        "username": "anniran",
+        "password": "9anna8925lva",
+	"path": "/home/anniran/server/go/src/cerberus/",
+        "channels": [],
+        "containers": [
+          {
+            "container": "anchorpr.sipher.cerberus.net"
+          },
+          {
+            "container": "lead0pr.sipher.cerberus.net"
+          },
+          {
+            "container": "lead1pr.sipher.cerberus.net"
+          },
+          {
+            "container": "communicatepr.sipher.cerberus.net"
+          }
+        ]
+      }
+    }
+  ]
+}

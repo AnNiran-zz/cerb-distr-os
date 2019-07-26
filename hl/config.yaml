@@ -1,0 +1,724 @@
+name: "Sipher Client"
+x-type: "hlfv1"
+version: 1.0.0
+
+client:
+  organization: Sipher
+
+  credentialStore:
+    path: /tmp/hfc-kvs
+    cryptoStore:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/users/User1@sipher.cerberus.dev/msp
+
+  logging:
+    level: info
+
+  connection:
+    timeout:
+
+      orderer: '300'
+
+  cryptoconfig:
+    path: ${GOPATH}/src/cerberus/hl/network/crypto-config
+
+    cryptoPath: ${GOPATH}/src/cerberus/hl/network/crypto-config
+
+  # BCCSP config for the client. Used by GO SDK.
+  BCCSP:
+    security:
+      enabled: true
+      default:
+        provider: "SW"
+      hashAlgorithm: "SHA2"
+      softVerify: true
+      level: 256
+
+  tlsCerts:
+    systemCertPool: true
+
+    client:
+      cert:
+        path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/users/User1@sipher.cerberus.dev/msp/signcerts/User1@sipher.cerberus.dev-cert.pem
+
+channels:
+  pachannel:
+    peers:
+      anchorpr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+      leadpr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventsource:    true
+        endorsingPeer:  true
+      communicatepr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+#      endorsepr.sipher.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        eventSource:    true
+#        endorsingPeer:  true
+#      commitpr.sipher.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        endorsingPeer:  true
+#      fallback0pr.sipher.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+#      fallback1pr.sipher.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+
+      anchorpr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+      leadpr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventsource:    true
+        endorsingPeer:  true
+      communicatepr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+#      endorsepr.whitebox.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        eventsource:    true
+#        endorsingPeer:  true
+#      commitpr.whitebox.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        endorsingPeer:  true
+#      fallback0pr.whitebox.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+#      fallback1pr.whitebox.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+
+  oachannel:
+    peers:
+      anchorpr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+      leadpr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventsource:    true
+        endorsingPeer:  true
+      communicatepr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+#      endorsepr.sipher.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        eventSource:    true
+#        endorsingPeer:  true
+#      commitpr.sipher.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        endorsingPeer:  true
+#      fallback0pr.sipher.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+#      fallback1pr.sipher.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+
+      anchorpr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+      leadpr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventsource:    true
+        endorsingPeer:  true
+      communicatepr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+#      endorsepr.whitebox.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        eventsource:    true
+#        endorsingPeer:  true
+#      commitpr.whitebox.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        endorsingPeer:  true
+#      fallback0pr.whitebox.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+#      fallback1pr.whitebox.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+
+  iachannel:
+    peers:
+      anchorpr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+      leadpr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventsource:    true
+        endorsingPeer:  true
+      communicatepr.sipher.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+#      endorsepr.sipher.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        eventSource:    true
+#        endorsingPeer:  true
+#      commitpr.sipher.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        endorsingPeer:  true
+#      fallback0pr.sipher.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+#      fallback1pr.sipher.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+
+      anchorpr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+      leadpr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventsource:    true
+        endorsingPeer:  true
+      communicatepr.whitebox.cerberus.dev:
+        chaincodeQuery: true
+        ledgerQuery:    true
+        eventSource:    true
+        endorsingPeer:  true
+#      endorsepr.whitebox.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        eventsource:    true
+#        endorsingPeer:  true
+#      commitpr.whitebox.cerberus.dev:
+#        chaincodeQuery: true
+#        ledgerQuery:    true
+#        endorsingPeer:  true
+#      fallback0pr.whitebox.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+#      fallback1pr.whitebox.cerberus.dev:
+#        chaincodeQuery: false
+#        ledgerQuery:    false
+#        eventSource:    false
+#        endorsingPeer:  false
+
+
+organizations:
+  Sipher:
+    mspid: SipherMSP
+    peers:
+      - anchorpr.sipher.cerberus.dev
+      - leadpr.sipher.cerberus.dev
+      - communicatepr.sipher.cerberus.dev
+#      - endorsepr.sipher.cerberus.dev
+#      - commitpr.sipher.cerberus.dev
+#      - fallback0pr.sipher.cerberus.dev
+#      - fallback1pr.sipher.cerberus.dev
+    certificateAuthorities:
+      - ca.sipher
+
+    users:
+      Admin:
+        cert:
+          path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/users/Admin@sipher.cerberus.dev/msp/signcerts/Admin@sipher.cerberus.dev-cert.pem
+
+      User1:
+        cert:
+          path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/users/User1@sipher.cerberus.dev/msp/signcerts/User1@sipher.cerberus.dev-cert.pem
+
+    cryptoPath: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/users/{username}@sipher.cerberus.dev/msp
+
+  WhiteBox:
+    mspid: WhiteBoxMSP
+    peers:
+      - anchorpr.whitebox.cerberus.dev
+      - leadpr.whitebox.cerberus.dev
+      - communicatepr.whitebox.cerberus.dev
+#      - endorsepr.whitebox.cerberus.dev
+#      - commitpr.whitebox.cerberus.dev
+#      - fallback0pr.whitebox.cerberus.dev
+#      - fallback1pr.whitebox.cerberus.dev
+
+    users:
+      Admin:
+        cert:
+          path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/users/Admin@whitebox.cerberus.dev/msp/signcerts/Admin@whitebox.cerberus.dev-cert.pem
+
+      User1:
+        cert:
+          path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/users/User1@whitebox.cerberus.dev/msp/signcerts/User1@whitebox.cerberus.dev-cert.pem
+
+    cryptoPath: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/user/{username}@whitebox.cerberus.dev/msp
+
+orderers:
+  osprimary1.cerberus.dev:
+    url: localhost:7050
+    grpcOptions:
+      ssl-target-name-override: osprimary1.cerberus.dev
+
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCaCerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/ordererOrganizations/cerberus.dev/orderers/osprimary1.cerberus.dev/msp/tlscacerts/tlsca.cerberus.dev-cert.pem
+
+  osprimary2.cerberus.dev:
+    url: localhost:8050
+    grpcOptions:
+      ssl-target-name-override: osprimary2.cerberus.dev
+
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCaCerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/ordererOrganizations/cerberus.dev/orderers/osprimary2.cerberus.dev/msp/tlscacerts/tlsca.cerberus.dev-cert.pem
+
+  osprimary3.cerberus.dev:
+    url: localhost:9050
+    grpcOptions:
+      ssl-target-name-override: osprimary3.cerberus.dev
+
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCaCerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/ordererOrganizations/cerberus.dev/orderers/osprimary3.cerberus.dev/msp/tlscacerts/tlsca.cerberus.dev-cert.pem
+
+  osfallback0.cerberus.dev:
+    url: localhost:11050
+    grpcOptions:
+      ssl-target-name-override: osfallback0.cerberus.dev
+
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCaCerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/ordererOrganizations/cerberus.dev/orderers/osfallback0.cerberus.dev/msp/tlscacerts/tlsca.cerberus.dev-cert.pem
+
+  osfallback1.cerberus.dev:
+    url: localhost:12050
+    grpcOptions:
+      ssl-target-name-override: osfallback1.cerberus.dev
+
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
+
+    tlsCaCerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/ordererOrganizations/cerberus.dev/orderers/osfallback1.cerberus.dev/msp/tlscacerts/tlsca.cerberus.dev-cert.pem
+
+
+peers:
+  anchorpr.sipher.cerberus.dev:
+    url: localhost:13001
+    eventUrl: localhost:13003
+    grpcOptions:
+      ssl-target-name-override: anchorpr.sipher.cerberus.dev
+
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+  leadpr.sipher.cerberus.dev:
+    url: localhost:13005
+    eventUrl: localhost:13007
+    grpcOptions:
+      ssl-target-name-override: leadpr.sipher.cerberus.dev
+
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+  communicatepr.sipher.cerberus.dev:
+    url: localhost:13009
+    eventUrl: localhost:13011
+    grpcOptions:
+      ssl-target-name-override: communicatepr.sipher.cerberus.dev
+
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+#  endorsepr.sipher.cerberus.dev:
+#    url: localhost:13013
+#    eventUrl: localhost:13015
+#    grpcOptions:
+#      ssl-target-name-override: endorsepr.sipher.cerberus.dev
+#
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+#  commitpr.sipher.cerberus.dev:
+#    url: localhost:13017
+#    eventUrl: localhost:13019
+#    grpcOptions:
+#      ssl-target-name-override: commitpr.sipher.cerberus.dev
+
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+#  fallback0pr.sipher.cerberus.dev:
+#    url: localhost:13021
+#    eventUrl: localhost:13023
+#    grpcOptions:
+#      ssl-target-name-override: fallback0pr.sipher.cerberus.dev
+
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+#  fallback1pr.sipher.cerberus.dev:
+#    url: localhost:13025
+#    eventUrl: localhost:13027
+#    grpcOptions:
+#      ssl-target-name-override: fallback1pr.sipher.cerberus.dev
+
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/tlsca/tlsca.sipher.cerberus.dev-cert.pem
+
+  anchorpr.whitebox.cerberus.dev:
+    url: localhost:13031
+    eventUrl: localhost:13033
+    grpcOptions:
+      ssl-target-name-override: anchorpr.whitebox.cerberus.dev
+
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+  leadpr.whitebox.cerberus.dev:
+    url: localhost:13035
+    eventUrl: localhost:13037
+    grpcOptions:
+      ssl-target-name-override: leadpr.whitebox.cerberus.dev
+
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+  communicatepr.whitebox.cerberus.dev:
+    url: localhost:13039
+    eventUrl: localhost:13041
+    grpcOptions:
+      ssl-target-name-override: communicatepr.whitebox.cerberus.dev
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+#  endorsepr.whitebox.cerberus.dev:
+#    url: localhost:13043
+#    eventUrl: localhost:13045
+#    grpcOptions:
+#      ssl-target-name-override: endorsepr.whitebox.cerberus.dev
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+#  commitpr.whitebox.cerberus.dev:
+#    url: localhost:13047
+#    eventUrl: localhost:13049
+#    grpcOptions:
+#      ssl-target-name-override: commitpr.whitebox.cerberus.dev
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+#  fallback0pr.whitebox.cerberus.dev:
+#    url: localhost:13051
+#    eventUrl: localhost:13053
+#    grpcOptions:
+#      ssl-target-name-override: fallback0pr.whitebox.cerberus.dev
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+#  fallback1pr.whitebox.cerberus.dev:
+#    url: localhost:13055
+#    eventUrl: localhost:13057
+#    grpcOptions:
+#      ssl-target-name-override: fallback1pr.whitebox.cerberus.dev
+#    tlsCACerts:
+#      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/tlsca/tlsca.whitebox.cerberus.dev-cert.pem
+
+
+certificateAuthorities:
+  ca.sipher:
+    url: localhost:7054
+    caName: ca-sipher
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/sipher.cerberus.dev/ca/ca.sipher.cerberus.dev-cert.pem
+
+  ca.whitebox:
+    url: localhost:7054
+    caName: ca-whitebox
+    tlsCACerts:
+      path: ${GOPATH}/src/cerberus/hl/network/crypto-config/peerOrganizations/whitebox.cerberus.dev/ca/ca.whitebox.cerberus.dev-cert.pem
+
+
+entityMatchers:
+  peer:
+    - pattern: anchorpr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13001
+      eventUrlSubstitutionExp:  localhost:13003
+      sslTargetOverrideUrlSubstitutionExp: anchorpr.sipher.cerberus.dev
+      mappedHost: anchorpr.sipher.cerberus.dev
+
+    - pattern: leadpr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13005
+      eventUrlSubstitutionExp:  localhost:13007
+      sslTargetOverrideUrlSubstitutionExp: leadpr.sipher.cerberus.dev
+      mappedHost: leadpr.sipher.cerberus.dev
+
+    - pattern: communicatepr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13009
+      eventUrlSubstitutionExp:  localhost:13011
+      sslTargetOverrideUrlSubstitutionExp: communicatepr.sipher.cerberus.dev
+      mappedHost: communicatepr.sipher.cerberus.dev
+
+    - pattern: endorsepr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13013
+      eventUrlSubstitutionExp:  localhost:13015
+      sslTargetOverrideUrlSubstitutionExp: endorsepr.sipher.cerberus.dev
+      mappedHost: endorsepr.sipher.cerberus.dev
+
+    - pattern: commitpr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13017
+      eventUrlSubstitutionExp:  localhost:13019
+      sslTargetOverrideUrlSubstitutionExp: commitpr.sipher.cerberus.dev
+      mappedHost: commitpr.sipher.cerberus.dev
+
+
+    - pattern: fallback0pr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13021
+      eventUrlSubstitutionExp:  localhost:13023
+      sslTargetOverrideUrlSubstitutionExp: fallback0pr.sipher.cerberus.dev
+      mappedHost: fallback0pr.sipher.cerberus.dev
+
+    - pattern: fallback1pr.sipher.cerberus.dev
+      urlSubstitutionExp:  localhost:13025
+      eventUrlSubstitutionExp:  localhost:13027
+      sslTargetOverrideUrlSubstitutionExp: fallback1pr.sipher.cerberus.dev
+      mappedHost: fallback1pr.sipher.cerberus.dev
+
+
+    - pattern: anchorpr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13031
+      eventUrlSubstitutionExp:  localhost:13033
+      sslTargetOverrideUrlSubstitutionExp: anchorpr.whitebox.cerberus.dev
+      mappedHost: anchorpr.whitebox.cerberus.dev
+
+    - pattern: leadpr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13035
+      eventUrlSubstitutionExp:  localhost:13037
+      sslTargetOverrideUrlSubstitutionExp: leadpr.whitebox.cerberus.dev
+      mappedHost: leadpr.whitebox.cerberus.dev
+
+    - pattern: communicatepr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13039
+      eventUrlSubstitutionExp:  localhost:13041
+      sslTargetOverrideUrlSubstitutionExp: communicatepr.whitebox.cerberus.dev
+      mappedHost: communicatepr.whitebox.cerberus.dev
+
+    - pattern: endorsepr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13043
+      eventUrlSubstitutionExp:  localhost:13045
+      sslTargetOverrideUrlSubstitutionExp: endorsepr.whitebox.cerberus.dev
+      mappedHost: endorsepr.whitebox.cerberus.dev
+
+    - pattern: commitpr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13047
+      eventUrlSubstitutionExp:  localhost:13049
+      sslTargetOverrideUrlSubstitutionExp: commitpr.whitebox.cerberus.dev
+      mappedHost: commitpr.whitebox.cerberuts.dev
+
+    - pattern: fallback0pr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13051
+      eventUrlSubstitutionExp:  localhost:13053
+      sslTargetOverrideUrlSubstitutionExp: fallback0pr.whitebox.cerberus.dev
+      mappedHost: fallback0pr.whitebox.cerberus.dev
+
+    - pattern: fallback1pr.whitebox.cerberus.dev
+      urlSubstitutionExp:  localhost:13055
+      eventUrlSubstitutionExp:  localhost:13057
+      sslTargetOverrideUrlSubstitutionExp: fallback1pr.whitebox.cerberus.dev
+      mappedHost: fallback1pr.whitebox.cerberus.dev
+
+
+# Check if this mapping is needed
+
+    - pattern: (w+):7051
+      urlSubstitutionExp: localhost:7051
+      sslTargetOverrideUrlSubstitutionExp: ${1}
+      mappedHost: ${1}
+
+    - pattern: (w+):13001
+      urlSubstitutionExp: localhost:13001
+      sslTargetOverrideUrlSubstitutionExp: anchorpr.sipher.cerberus.dev
+      mappedHost: anchorpr.sipher.cerberus.dev
+
+    - pattern: (w+):13005
+      urlSubstitutionExp: localhost:13005
+      sslTargetOverrideUrlSubstitutionExp: leadpr.sipher.cerberus.dev
+      mappedHost: leadpr.sipher.cerberus.dev
+
+    - pattern: (w+):13009
+      urlSubstitutionExp: localhost:13009
+      sslTargetOverrideUrlSubstitutionExp: communicatepr.sipher.cerberus.dev
+      mappedHost: communicatepr.sipher.cerberus.dev
+
+    - pattern: (w+):13013
+      urlSubstitutionExp: localhost:13013
+      sslTargetOverrideUrlSubstitutionExp: endorsepr.sipher.cerberus.dev
+      mappedHost: endorsepr.sipher.cerberus.dev
+
+    - pattern: (w+):13017
+      urlSubstitutionExp: localhost:13017
+      sslTargetOverrideUrlSubstitutionExp: commitpr.sipher.cerberus.dev
+      mappedHost: commitpr.sipher.cerberus.dev
+
+    - pattern: (w+):13021
+      urlSubstitutionExp: localhost:13021
+      sslTargetOverrideUrlSubstitutionExp: fallback0pr.sipher.cerberus.dev
+      mappedHost: fallback0pr.sipher.cerberus.dev
+
+    - pattern: (w+):13025
+      urlSubstitutionExp: localhost:13025
+      sslTargetOverrideUrlSubstitutionExp: fallback1pr.sipher.cerberus.dev
+      mappedHost: fallback1pr.sipher.cerberus.dev
+
+    - pattern: (w+):13031
+      urlSubstitutionExp: localhost:13031
+      sslTargetOverrideUrlSubstitutionExp: anchorpr.whitebox.cerberus.dev
+      mappedHost: anchorpr.whitebox.cerberus.dev
+
+    - pattern: (w+):13035
+      urlSubstitutionExp: localhost:13035
+      sslTargetOverrideUrlSubstitutionExp: leadpr.whitebox.cerberus.dev
+      mappedHost: leadpr.whitebox.cerberus.dev
+
+    - pattern: (w+):13039
+      urlSubstitutionExp: localhost:13039
+      sslTargetOverrideUrlSubstitutionExp: communicatepr.whitebox.cerberus.dev
+      mappedHost: communicatepr.whitebox.cerberus.dev
+
+    - pattern: (w+):13043
+      urlSubstitutionExp: localhost:13043
+      sslTargetOverrideUrlSubstitutionExp: endorsepr.sipher.cerberus.dev
+      mappedHost: endrosepr.sipher.cerberus.dev
+
+    - pattern: (w+):13047
+      urlSubstitutionExp: localhost:13047
+      sslTargetOverrideUrlSubstitutionExp: commitpr.sipher.cerberus.dev
+      mappedHost: commitpr.sipher.cerberus.dev
+
+    - pattern: (w+):13051
+      urlSubstitutionExp: localhost:13051
+      sslTargetOverrideUrlSubstitutionExp: fallback0pr.sipher.cerberus.dev
+      mappedHost: fallback0pr.sipher.cerberus.dev
+
+    - pattern: (w+):13055
+      urlSubstitutionExp: localhost:13055
+      sslTargetOverrideUrlSubstitutionExp: fallback1pr.sipher.cerberus.dev
+      mappedHost: fallback1pr.sipher.cerberus.dev
+
+  orderer:
+    - pattern: osprimary1.cerberus.dev
+      urlSubstitutionExp: localhost:7050
+      sslTargetOverrideUrlSubstitutionExp: osprimary1.cerberus.dev
+      mappedHost: osprimary1.cerberus.dev
+
+    - pattern: osprimary2.cerberus.dev
+      urlSubstitutionExp: localhost:8050
+      sslTargetOverrideUrlSubstitutionExp: osprimary2.cerberus.dev
+      mappedHost: osprimary2.cerberus.dev
+
+    - pattern: osprimary3.cerberus.dev
+      urlSubstitutionExp: localhost:9050
+      sslTargetOverrideUrlSubstitutionExp: osprimary3.cerberus.dev
+      mappedHost: osprimary3.cerberus.dev
+
+    - pattern: osfallback0.cerberus.dev
+      urlSubstitutionExp: localhost:11050
+      sslTargetOverrideUrlSubstitutionExp: osfallback0.cerberus.dev
+      mappedHost: osfallback0.cerberus.dev
+
+    - pattern: osfallback1.cerberus.dev
+      urlSubstitutionExp: localhost:12050
+      sslTargetOverrideUrlSubstitutionExp: osfallback1.cerberus.dev
+      mappedHost: osfallback1.cerberus.dev
+
+  certificateAuthorities:
+    - pattern: ca.sipher
+      urlSubstitutionExp: localhost:7054
+      mappedhost: ca.sipher
+
+    - pattern: ca.whitebox
+      urlSubstitutionExp: localhost:8054
+      mappedHost: ca.whitebox

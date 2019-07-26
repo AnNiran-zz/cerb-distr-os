@@ -1,0 +1,35 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  os-base:
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OSMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+
+        #kafka
+      - ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=2
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=5s
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=45s
+      - CONFIGTX_ORDERER_KAFKA_BROKERS=[kafka0.cerberus.net:9092, kafka1.cerberus.net:9092, kafka2.cerberus.net:9092, kafka3.cerberus.net:9092, kafka4.cerberus.net:9092, kafka5.cerberus.net:9092, kafka6.cerberus.net:9092]
+      - ORDERER_GENERAL_GENESISPROFILE=OSNModeKafka
+      - ORDERER_ABSOLUTEMAXBYTES=${ORDERER_ABSOLUTEMAXBYTES}
+      - ORDERER_PREFERREDMAXBYTES=${ORDERER_PREFERREDMAXBYTES}
+    command: orderer

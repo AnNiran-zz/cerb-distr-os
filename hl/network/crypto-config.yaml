@@ -1,0 +1,45 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# ---------------------------------------------------------------------------
+# "OrdererOrgs" - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderers
+  # ---------------------------------------------------------------------------
+  - Name: OS
+    Domain: cerberus.net
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: osinstance0
+      - Hostname: osinstance1
+      - Hostname: osinstance2
+      - Hostname: osinstance3
+      - Hostname: osinstance4
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Cerberus
+  # ---------------------------------------------------------------------------
+  - Name: CerberusOrg
+    Domain: cerberusorg.cerberus.net
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: anchorpr
+      - Hostname: leadpr
+      - Hostname: communicatepr
+      - Hostname: execute0pr
+      - Hostname: execute1pr
+      - Hostname: fallback0pr
+      - Hostname: fallback1pr
+
+    Users:
+      Count: 1

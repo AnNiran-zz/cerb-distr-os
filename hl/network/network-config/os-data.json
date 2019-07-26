@@ -1,0 +1,48 @@
+{
+	"os": [
+		{
+			"instances": [
+				{
+					"label": "osinstance0",
+					"container": "osinstance0.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"label": "osinstance1",
+					"container": "osinstance2.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"label": "osinstance2",
+					"container": "osinstance2.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"label": "osinstance3",
+					"container": "osinstance3.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"label": "osinstance4",
+					"container": "osinstance4.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				}
+			]
+		}
+	]
+}

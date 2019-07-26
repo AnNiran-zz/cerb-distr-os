@@ -1,0 +1,42 @@
+{
+  "organizations": [
+    {
+      "org": {
+        "name": "CerberusOrg",
+        "host": "159.203.35.156",
+        "username": "anniran",
+        "password": "9anna8925lva",
+        "channels": [
+          {"channel": "personaccountsch"},
+          {"channel": "institutionaccountsch"},
+          {"channel": "integrationaccountsch"}
+        ],
+        "containers": [
+          {"container": "anchorpr.cerberusorg.cerberus.net"},
+	  {"container": "leadpr.cerberusorg.cerberus.net"},
+          {"container": "communicatepr.cerberusorg.cerberus.net"}
+        ]
+      }
+    },
+    {
+      "org": {
+        "name": "WhiteBox",
+        "host": "149.28.196.252",
+        "username": "anniran",
+        "password": "9anna8925lva",
+        "channels": [
+          {"channel": "personaccountsch"},
+          {"channel": "institutionaccountsch"},
+          {"channel": "integrationaccountsch"}
+        ],
+        "containers": [
+          {"container": "anchorpr.whitebox.cerberus.net"},
+          {"container": "lead0pr.whitebox.cerberus.net"},
+          {"container": "lead1pr.whitebox.cerberus.net"},
+          {"container": "communicatepr.whitebox.cerberus.net"}
+        ]
+      }
+    }
+  ]
+}
+
