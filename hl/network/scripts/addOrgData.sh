@@ -3,10 +3,17 @@
 # to add a new organization:
 # add file <orgname>-data.json inside external-orgs folder
 # call ./cerberusntw.sh addorg -n <org-name>
-function addEnvironmentData() { # add check for existing extra_hosts
+function addOrgEnvData() { # add check for existing extra_hosts
 	newOrg=$1
 
-	# obtain data from json file
+	# obtain data from external-orgs/ json file
+	ARCH=$(uname -s | grep Darwin)
+	if [ "$ARCH" == "Darwin" ]; then
+		OPTS="-it"
+	else
+		OPTS="-i"
+	fi
+
 	CURRENT_DIR=$PWD
 
 	ORG_CONFIG_FILE="external-orgs/${newOrg}-data.json"
@@ -16,44 +23,67 @@ function addEnvironmentData() { # add check for existing extra_hosts
 		exit 1
 	fi
 
-	orgLabelVar="${newOrg^^}_ORG_LABEL"
+	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
+	orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 
-	orgName=$(jq -r '.name' "external-orgs/$newOrg-data.json")
-	orgNameVar="${newOrg^^}_ORG_NAME"
-	
-	orgHost=$(jq -r '.host' "external-orgs/$newOrg-data.json")
-	orgHostVar="${newOrg^^}_ORG_IP"
+	orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
 
-	orgHostUsername=$(jq -r '.username' "external-orgs/$newOrg-data.json")
-	orgHostUsernameVar="${newOrg^^}_ORG_USERNAME"
+	for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
+		_jq(){
+			peerNameValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${1})\"")
+			peerNameValueStripped=$(echo $peerNameValue | sed 's/"//g')
+			peerNameVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_NAME"
 
-	orgHostPassword=$(jq -r '.password' "external-orgs/$newOrg-data.json")
-	orgHostPasswordVar="${newOrg^^}_ORG_PASSWORD"
+			peerContainerValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${2})\"")
+			peerContainerValueStripped=$(echo $peerContainerValue | sed 's/"//g')
+			peerContainerVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_CONTAINER"
 
-	orgHostPath=$(jq -r '.path' "external-orgs/$newOrg-data.json")
-	orgHostPathVar="${newOrg^^}_ORG_HOSTPATH"
+			peerHostValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${3})\"")
+			peerHostValueStripped=$(echo $peerHostValue | sed 's/"//g')
+			peerHostVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_HOST"
+
+			peerUsernameValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${4})\"")
+			peerUsernameValueStripped=$(echo $peerUsernameValue | sed 's/"//g')
+			peerUsernameVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_USERNAME"
+
+			peerPasswordValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${5})\"")
+			peerPasswordValueStripped=$(echo $peerPasswordValue | sed 's/"//g')
+			peerPasswordVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PASSWORD"
+
+			peerPathValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${6})\"")
+			peerPathValueStripped=$(echo $peerPathValue | sed 's/"//g')
+			peerPathVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PATH"
+
+			source .env
+
+			# add label
+			addEnvVariable $peerNameValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_NAME" "${!peerNameVar}"
+
+			# add container
+			addEnvVariable $peerContainerValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_CONTAINER" "${!peerContainerVar}"
+
+			# add host
+			addEnvVariable $peerHostValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_HOST" "${!peerHostVar}"
+
+			# add username
+			addEnvVariable $peerUsernameValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_USERNAME" "${!peerUsernameVar}"
+
+			# add password 
+			addEnvVariable $peerPasswordValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PASSWORD" "${!peerPasswordVar}"
+
+			# add path
+			addEnvVariable $peerPathValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PATH" "${!peerPathVar}"
+				
+			source .env
+
+		}
+		echo $(_jq '.name' '.container' '.host' '.username' '.password' '.path')
+	done
 
 	source .env
 	
-	# add label
-	addEnvVariable $newOrg "${newOrg^^}_ORG_LABEL" "${!orgLabelVar}"
-
-	# add name
-	addEnvVariable $orgName "${newOrg^^}_ORG_NAME" "${!orgNameVar}"
-
-	# add host
-	addEnvVariable $orgHost "${newOrg^^}_ORG_IP" "${!orgHostVar}"
-
-	# add username and password
-	addEnvVariable $orgHostUsername "${newOrg^^}_ORG_USERNAME" "${!orgHostUsernameVar}"
-	addEnvVariable $orgHostPassword "${newOrg^^}_ORG_PASSWORD" "${!orgHostPasswordVar}"
-
-	# add host path to network
-	addEnvVariable $orgHostPath "${newOrg^^}_ORG_HOSTPATH" "${!orgHostPathVar}"
-
-	source .env
-
-	echo "### Organization ${orgName} environment data added successfully to Cerberusntw network"
+	echo "### Organization ${newOrg^} environment data added successfully to Cerberusntw network"
 }
 
 function addExtraHostsToOs() {
@@ -354,6 +384,7 @@ function addEnvVariable() {
 		echo "### ${varName} value updated"
 	else
 		echo "${varName} already set"
+		echo ""
 	fi
 
 	source .env
