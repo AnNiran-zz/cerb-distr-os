@@ -3,7 +3,7 @@
 . scripts/addOrgData.sh
 . scripts/removeOrgData.sh
 
-function checkOrgEnvForSsh() {
+function addOrgEnvironmentData() {
 
 	# read data inside external-orgs folder
  	ARCH=$(uname -s | grep Darwin)
@@ -22,46 +22,30 @@ function checkOrgEnvForSsh() {
 		exit 1
 	fi
 
-	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
- 	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
-	orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
-
 	source .env
 
-	if [ -z "${!orgLabelVar}" ]; then
-		echo "Required network environment data is not present. Obtaining ... "
-		addOrgEnvData $NEW_ORG
-		exit 0
-	fi
-
-	source .env
+	addOrgEnvData $NEW_ORG
 }
 
 function deliverNetworkData() {
 
-	orgDataFile="external-orgs/${NEW_ORG}-data.json"
-	if [ ! -f "$orgDataFile" ]; then
-		echo
-		echo "ERROR: external-orgs/$NEW_ORG-data.json file not found. Cannot proceed with obtaining organization data."
-		exit 1
-	fi
+	# check if organization environment variables are present
+	addOrgEnvironmentData
 
-	source .env
-
-	# add environment variables
-	addEnvironmentData $NEW_ORG
+	echo
+	echo
 
 	osDataFile="network-config/os-data.json"
 	if [ ! -f "$osDataFile" ]; then
 		echo
-		echo "ERROR: network-config/os-data.json file not found. Cannot proceed with copying network data to organization host"
+		echo "ERROR: ${osDataFile} file not found. Cannot proceed with copying network data to organization host"
  		exit 1
 	fi
 
 	cerberusOrgDataFile="network-config/cerberusorg-data.json"
 	if [ ! -f "$cerberusOrgDataFile" ]; then
 		echo
-		echo "ERROR: network-config/cerberusorg-data.json file not found. Cannot proceed with copying network data to organization host"
+		echo "ERROR: ${cerberusOrgDataFile} file not found. Cannot proceed with copying network data to organization host"
 		exit 1
 	fi
 
@@ -72,55 +56,197 @@ function deliverNetworkData() {
 		exit 1
 	fi
 
-	orgUsername="${NEW_ORG^^}_ORG_USERNAME"
-	orgPassword="${NEW_ORG^^}_ORG_PASSWORD"
-	orgHost="${NEW_ORG^^}_ORG_IP"
-	orgPath="${NEW_ORG^^}_ORG_HOSTPATH"
-	orgName="${NEW_ORG^^}_ORG_NAME"
-
-	sshpass -p "${!orgPassword}" scp $osDataFile ${!orgUsername}@${!orgHost}:${!orgPath}/hl/network/network-config
-	sshpass -p "${!orgPassword}" scp $cerberusOrgDataFile ${!orgUsername}@${!orgHost}:${!orgPath}/hl/network/network-config
-
-	if [ "$?" -ne 0 ]; then
-		echo "ERROR: Cannot copy data files to ${!orgName} remote host."
- 		exit 1
+	# deliver files to all host machines
+	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+	if [ ! -f "$ORG_CONFIG_FILE" ]; then
+		echo
+		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing organization data and delivering to host machines"
+		exit 1
 	fi
 
-	echo "Cerberus Network data files copied to ${!orgName} remote host successfully."
+	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
+
+	orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
+
+	# deliver network data files to each host
+	for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
+		_jq(){
+			containerNameValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${1})\"")
+			containerNameValueStripped=$(echo $containerNameValue | sed 's/"//g')
+			
+			containerHostVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_HOST"
+			containerUsernameVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_USERNAME"
+			containerPasswordVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PASSWORD"
+			containerPathVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PATH"
+			
+			# check if file is present on the remote host and deliver it if it is not
+			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test -e ${!containerPathVar}hl/network/${osDataFile}"
+			result=$?
+			echo $result
+			
+			if [ $result -ne 0 ]; then
+				sshpass -p "${!containerPasswordVar}" scp $osDataFile ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/network-config
+
+				if [ "$?" -ne 0 ]; then
+					echo "ERROR: Cannot copy ${osDataFile} to ${!containerHostVar} remote host"
+					exit 1
+				fi
+
+				echo
+				echo "$osDataFile copied to $containerHostVar"
+				echo
+			else
+				echo
+				echo "$osDataFile is already present on $containerHostVar"
+				echo
+			fi
+
+			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test -e ${!containerPathVar}hl/network/${cerberusOrgDataFile}"
+			result=$?
+			echo $result
+
+			if [ $result -ne 0 ]; then
+				sshpass -p "${!containerPasswordVar}" scp $cerberusOrgDataFile ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/network-config
+
+				if [ "$?" -ne 0 ]; then
+					echo "ERROR: Cannot copy ${osDataFile} to ${!containerHostVar} remote host"
+					exit 1
+				fi
+
+				echo
+				echo "$cerberusOrgDataFile copied to $containerHostVar"
+				echo
+			else
+				echo
+				echo "$cerberusOrgDataFile is already present on $containerHostVar"
+				echo
+			fi
+		}
+		echo $(_jq '.name')
+	done
+}
+
+function removeOrgEnvironmentData() {
+	
+	# read data inside external-orgs folder
+	ARCH=$(uname -s | grep Darwin)
+	if [ "$ARCH" == "Darwin" ]; then
+		OPTS="-it"
+	else
+		OPTS="-i"
+	fi
+
+	CURRENT_DIR=$PWD
+ 
+	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+	if [ ! -f "$ORG_CONFIG_FILE" ]; then
+		echo
+		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing new orgation configuration"
+		exit 1
+	fi
+
+	source .env
+
+	removeOrgEnvData $NEW_ORG
+
+	source .env
 }
 
 function addNetworkEnvDataRemotely() {
          
 	# check if organization environment variables are set
-	orgUsernameVar="${NEW_ORG^^}_ORG_USERNAME"
-	orgPasswordVar="${NEW_ORG^^}_ORG_PASSWORD"
-	orgHostVar="${NEW_ORG^^}_ORG_IP"
-	orgHostPathVar="${NEW_ORG^^}_ORG_HOSTPATH"
+	addOrgEnvironmentData
 
-	source .env
+	echo
+	echo
 
-	if [ -z "${!orgUsernameVar}" ] || [ -z "${!orgPasswordVar}" ] || [ -z "${!orgHostVar}" ] || [ -z "${!orgHostPathVar}" ]; then
-		echo "Required organization environment data is not present. Obtaining ... "
-    
-		addEnvironmentData $NEW_ORG
-	fi      
+	osDataFile="network-config/os-data.json"
+	cerberusOrgDataFile="network-config/cerberusorg-data.json"
 
-	source .env
+	# check if organization data file is present
+	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+	if [ ! -f "$ORG_CONFIG_FILE" ]; then
+		echo
+		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing organization data and delivering to host machines"
+		exit 1
+	fi
 
-	# set network data remotely
-	which sshpass 
+	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
+
+	orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
+
+	which sshpass
 	if [ "$?" -ne 0 ]; then
 		echo "sshpass tool not found"
-		exit 1	
-	fi      
-
-	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./sipher.sh add-network-env"
- 	if [ "$?" -ne 0 ]; then
-		echo "Cerberus network environment data is not added to ${NEW_ORG^} host."
 		exit 1
-	fi      
+	fi
 
-	echo "Cerberus network environment data successfully added to ${NEW_ORG^} host"
+	# add environment data to each host
+	for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
+		_jq(){
+			echo "here I am"
+			containerNameValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${1})\"")
+			containerNameValueStripped=$(echo $containerNameValue | sed 's/"//g')
+
+			containerHostVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_HOST"
+			containerUsernameVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_USERNAME"
+			containerPasswordVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PASSWORD"
+			containerPathVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PATH"
+
+			echo "here"
+			# check if file is present on the remote host and deliver it if it is not
+			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test -e ${!containerPathVar}hl/network/${osDataFile}"
+			result=$?
+			echo $result
+
+			if [ $result -ne 0 ]; then
+				sshpass -p "${!containerPasswordVar}" scp $osDataFile ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/network-config
+
+				if [ "$?" -ne 0 ]; then
+					echo "ERROR: Cannot copy ${osDataFile} to ${!containerHostVar} remote host"
+					exit1
+				fi
+
+				echo
+				echo "$osDataFile copied to $containerHostVar"
+				echo
+			fi
+
+			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test -e ${!containerPathVar}hl/network/${cerberusOrgDataFile}"
+			result=$?
+			echo $result
+
+			if [ $result -ne 0 ]; then
+				sshpass -p "${!containerPasswordVar}" scp $cerberusOrgDataFile ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/network-config
+
+				if [ "$?" -ne 0 ]; then
+					echo "ERROR: Cannot copy ${osDataFile} to ${!containerHostVar} remote host"
+					exit 1
+				fi
+
+				echo
+				echo "$cerberusOrgDataFile copied to $containerHostVar"
+				echo
+			fi
+
+			# start remote script
+			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "cd ${!containerPathVar}hl/network && ./${NEW_ORG}.sh add-network-env"
+			result=$?
+			echo $result
+
+			if [ $result -ne 0 ]; then
+				echo "ERROR: Cerberus network data is not added to ${containerNameValue} host machine"
+				exit 1
+			fi
+
+			echo
+			echo "Cerberus network environment data has been successfully added to ${containerNameValue} host machine"
+
+		}
+		echo $(_jq '.name')
+	done
 }
  
 function removeNetworkEnvDataRemotely() {

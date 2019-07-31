@@ -1,43 +1,58 @@
 #!/bin/bash
-function removeOrgEnvironmentData() {
+function removeOrgEnvData() {
 	org=$1
-	CURRENT_DIR=$PWD
 
-	# obtain data from json file
 	ORG_CONFIG_FILE="external-orgs/${org}-data.json"
-	if [ ! -f "$ORG_CONFIG_FILE" ]; then
-		echo
-		echo "ERROR: external-orgs/$org-data.json file not found. Cannot proceed with parsing organization data"
-		exit 1
-	fi
 
-	orgLabelVar="${org^^}_ORG_LABEL"
-	orgNameVar="${org^^}_ORG_NAME"
+	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
+	orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 
-	orgHostVar="${org^^}_ORG_IP"
+	# remove organization label
+	removeEnvVariable "${orgLabelValueStripped^^}_ORG_LABEL" "${!orgLabelVar}"
 
-	orgHostUsernameVar="${org^^}_ORG_USERNAME"
-	orgHostPasswordVar="${org^^}_ORG_PASSWORD"
+	orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
 
-	orgHostPathVar="${org^^}_ORG_HOSTPATH"
+	for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
+		_jq(){
+			peerNameValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${1})\"")
+			peerNameValueStripped=$(echo $peerNameValue | sed 's/"//g')
+			peerNameVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_NAME"
 
-	source .env
+			peerContainerVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_CONTAINER"
 
-	# remove lavel
-	removeEnvVariable "${org^^}_ORG_LABEL" "${!orgLabelVar}"
+			peerHostVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_HOST"
 
-	# remove name
-	removeEnvVariable "${org^^}_ORG_NAME" "${!orgNameVar}"
+			peerUsernameVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_USERNAME"
 
-	# remove host
-	removeEnvVariable "${org^^}_ORG_IP" "${!orgHostVar}"
+			peerPasswordVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PASSWORD"
 
-	# remove username and password
-	removeEnvVariable "${org^^}_ORG_USERNAME" "${!orgHostUsernameVar}"
-	removeEnvVariable "${org^^}_ORG_PASSWORD" "${!orgHostPasswordVar}"
+			peerPathVar="${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PATH"
 
-	# remove host path
-	removeEnvVariable "${org^^}_ORG_HOSTPATH" "${!orgHostPathVar}"
+			source .env
+
+			# remove name
+			removeEnvVariable "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_NAME" "${!peerNameVar}"
+
+			# remove container
+			removeEnvVariable "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_CONTAINER" "${!peerContainerVar}"
+
+			# remove host
+			removeEnvVariable "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_HOST" "${!peerHostVar}"
+
+			# remove username
+			removeEnvVariable "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_USERNAME" "${!peerUsernameVar}"
+
+			# remove password
+			removeEnvVariable "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PASSWORD" "${!peerPasswordVar}"
+
+			# remove path
+			removeEnvVariable "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_PATH" "${!peerPathVar}"
+
+			source .env
+		}
+		echo $(_jq '.name')
+	done
 
 	echo "Organization ${org^} environment data successfully removed from Cerberus network"
 }

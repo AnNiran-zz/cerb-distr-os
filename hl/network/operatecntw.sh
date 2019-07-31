@@ -7,27 +7,45 @@ export FABRIC_CFG_PATH=${PWD}
 export VERBOSE=false
 
 . cerberusntw.sh 
+. extorgcerbntw.sh
 
 # Print the usage message
 function printHelp() {
 	echo
 	echo "### Commands: ###"
 	echo
-	echo "operatecntw.sh generate"
-	echo "Generates required certificates and genesis block for channels PersonAccounts, InstitutionAccounts and IntegrationAccounts"
+	echo "operatecntw.sh <action>"
+	echo "	generate"
+	echo "		Generates required certificates and genesis block for channels PersonAccounts, InstitutionAccounts and IntegrationAccounts"
 	echo
-	echo "operatecntw.sh network-up"
-	echo "Generates required certifictaes and genesis block for channels PersonAccounts, InstitutionAccount and IntegrationAccounts"
-	echo "Starts all containers for Ordering Service instances and CerberusOrg"
+	echo "	network-up"
+	echo "		Generates required certifictaes and genesis block for channels PersonAccounts, InstitutionAccount and IntegrationAccounts"
+	echo "		Starts all containers for Ordering Service instances and CerberusOrg"
 	echo
-	echo "operatecntw.sh network-down"
-	echo "Stops all running containers for Ordering Service instances and CerberusOrg"
-	echo "Deletes all created certificates and genesis block for channels PersonAccounts, InstitutionAccounts and IntegrationAccounts"
+	echo "	network-down"
+	echo "		Stops all running containers for Ordering Service instances and CerberusOrg"
+	echo "		Deletes all created certificates and genesis block for channels PersonAccounts, InstitutionAccounts and IntegrationAccounts"
 	echo
-
 	echo
-	echo "operatecntw.sh help"
-	echo "Displays this message"
+	echo "	deliver-network-data -o <organization-name>"
+	echo "		Checks if organization data is set in environment variaons"
+	echo "		Delivers Cerberus network hosts data to external organization host machines"
+	echo
+	echo 
+	echo "	add-org-env -o <organization-name>"
+	echo "		Adds organization host machines data to environemnt configuration file"
+	echo
+	echo
+	echo "	remove-org-env -o <organization-name>"
+	echo "		Removes organization host machines data from environment configuration file"
+	echo
+	echo
+	echo "	add-netenv-remotely -o <organization-name>"
+	echo "		Add Cerberus network environment data to organization peers host machines remotely by starting predefined scripts on remote machines"
+	echo
+	echo
+	echo "	help"
+	echo "		Displays this message"
 	echo
 
 	echo "  cerberusntw.sh <mode> [-c <channel name>] [-t <timeout>] [-d <delay>] [-f <docker-compose-file>] [-s <dbtype>] [-l <language>] [-o <consensus-type>] [-i <imagetag>] [-v]"
@@ -90,24 +108,25 @@ elif [ "$MODE" == "network-down" ]; then
 elif [ "$MODE" == "generate" ]; then
 	EXPMODE="Generating Cerberus certificates and genesis block for channels: PersonAccounts, InstitutionAccounts and IntegrationAccounts"
 
-
- # ./cerberusntw.sh deliver-network-data -n sipher
+# ./operatecntw.sh deliver-network-data -o sipher
 elif [ "$MODE" == "deliver-network-data" ]; then
-	EXPMODE="Deliver Cerberus network data to organization ..."
+	EXPMODE="Deliver Cerberus network data to organization host machines"
 
-# ./cerberusntw.sh addorgenv -n sipher
+# ./operatecntw.sh add-org-env -o sipher
 elif [ "$MODE" == "add-org-env" ]; then
 	EXPMODE="Adding new organization environment data"
 
-# ./cerberusntw.sh removeorgenv -n sipher
+# ./operatecntw.sh remove-org-env -o sipher
 elif [ "$MODE" == "remove-org-env" ]; then
 	EXPMODE="Removing organization environment data"
 
-# ./cerberusntw.sh add-netenv-remotely -n sipher
+# ./operatecntw.sh add-netenv-remotely -o sipher
 elif [ "$MODE" == "add-netenv-remotely" ]; then
-	echo "This command will successfully add network data to organization remotely if network configuration files are present on the remote host machine address set inside \"external-    orgs/<organization-name>-data.json\" file. If you are not certain about this run \"./cerberusntw.sh deliver-network-data -n <organization-name>\" first."
+	echo "This command will successfully add Cerberus network environment data to organization peers host machines remotely if network configuration files are present on them inside \"network-config/\" folder. If you are not certain about this run \"./operatecntw.sh deliver-network-data -o <organization-name>\" first."
 
-	EXPMODE="Adding network environment data to organization host remotely"
+	EXPMODE="Adding network environment data to organization hosts remotely"
+
+
 
 # ./cerberusntw.sh remove-netenv-remotely -n sipher
 elif [ "$MODE" == "remove-netenv-remotely" ]; then
@@ -224,60 +243,57 @@ elif [ "${MODE}" == "generate" ]; then
 	replacePrivateKey
 	generateChannelsArtifacts
 
-
-
-# ./cerberusntw.sh deliver-network-data -n sipher
+# ./operatecntw.sh deliver-network-data -o sipher
 elif [ "${MODE}" == "deliver-network-data" ]; then
 	# check if organization option tag is provided
 	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
+		echo "Please provide a organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
 
-	deliverNetworkData $NEW_ORG
+	deliverNetworkData
 
-# ./cerberusntw.sh addorgenv -n sipher
+# ./operatecntw.sh addorgenv -o sipher
 elif [ "${MODE}" == "add-org-env" ]; then
 
 	# check if organization option tag is provided
 	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
+		echo "Please provide a organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
 
-	source .env
-	
-	# add environment variables
-	addEnvironmentData $NEW_ORG
+	addOrgEnvironmentData
 
-# ./cerberusntw.sh removeorgenv -n sipher
+# ./operatecntw.sh remove-org-env -o sipher
 elif [ "${MODE}" == "remove-org-env" ]; then
 
 	# check if organization option tag is provided
 	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
+		echo "Please provide a organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
 
-	source .env
+	removeOrgEnvironmentData
 
-	# remove environment variables
-	removeOrgEnvironmentData $NEW_ORG
-
-# ./cerberusntw.sh add-netenv-remotely -n sipher
+# ./operatecntw.sh add-netenv-remotely -n sipher
 elif [ "${MODE}" == "add-netenv-remotely" ]; then
 
 	# check if organization option tag is provided
 	if [ -z "$NEW_ORG" ]; then
-	echo "Please provide a organization name with '-n' option tag"
+		echo "Please provide a organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
 
 	addNetworkEnvDataRemotely
+
+
+
+
+
 
 # ./cerberusntw.sh remove-netenv-remotely -n sipher
 elif [ "${MODE}" == "remove-netenv-remotely" ]; then

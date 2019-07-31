@@ -1,31 +1,16 @@
 #!/bin/bash
 
-# to add a new organization:
-# add file <orgname>-data.json inside external-orgs folder
-# call ./cerberusntw.sh addorg -n <org-name>
 function addOrgEnvData() { # add check for existing extra_hosts
 	newOrg=$1
 
-	# obtain data from external-orgs/ json file
-	ARCH=$(uname -s | grep Darwin)
-	if [ "$ARCH" == "Darwin" ]; then
-		OPTS="-it"
-	else
-		OPTS="-i"
-	fi
-
-	CURRENT_DIR=$PWD
-
 	ORG_CONFIG_FILE="external-orgs/${newOrg}-data.json"
-	if [ ! -f "$ORG_CONFIG_FILE" ]; then
-		echo
-		echo "ERROR: $ORG_CONFIG_FILE not found. Cannot proceed with parsing organization data."
-		exit 1
-	fi
 
 	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
 	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
 	orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
+
+	# add organization label
+	addEnvVariable $orgLabelValueStripped "${orgLabelValueStripped^^}_ORG_LABEL" "${!orgLabelVar}"
 
 	orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
 
@@ -57,7 +42,7 @@ function addOrgEnvData() { # add check for existing extra_hosts
 
 			source .env
 
-			# add label
+			# add name
 			addEnvVariable $peerNameValueStripped "${orgLabelValueStripped^^}_ORG_${peerNameValueStripped^^}_NAME" "${!peerNameVar}"
 
 			# add container
@@ -81,7 +66,7 @@ function addOrgEnvData() { # add check for existing extra_hosts
 		echo $(_jq '.name' '.container' '.host' '.username' '.password' '.path')
 	done
 
-	source .env
+	#source .env
 	
 	echo "### Organization ${newOrg^} environment data added successfully to Cerberusntw network"
 }
