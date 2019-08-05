@@ -15,7 +15,7 @@ function addOrgEnvironmentData() {
 
 	CURRENT_DIR=$PWD
 
- 	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+ 	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
 	if [ ! -f "$ORG_CONFIG_FILE" ]; then
 		echo
 		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing new orgation configuration"
@@ -27,6 +27,7 @@ function addOrgEnvironmentData() {
 	addOrgEnvData $NEW_ORG
 }
 
+# deliver cerberus network organization and ordering service data to external organization remote hosts
 function deliverNetworkData() {
 
 	# check if organization environment variables are present
@@ -57,7 +58,7 @@ function deliverNetworkData() {
 	fi
 
 	# deliver files to all host machines
-	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
 	if [ ! -f "$ORG_CONFIG_FILE" ]; then
 		echo
 		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing organization data and delivering to host machines"
@@ -122,6 +123,35 @@ function deliverNetworkData() {
 				echo "$cerberusOrgDataFile is already present on $containerHostVar"
 				echo
 			fi
+
+			# list external organizations files
+			for file in external-orgs/*-data.json; do
+				if grep -q "${ORG}" "$file"; then
+					continue
+				else
+					# copy external organization data file to remote host
+					sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test  -e ${!containerPathVar}hl/network/${file}"
+					result=$?
+					echo $result
+
+					if [ $result -ne 0 ]; then
+						sshpass -p "${!containerPasswordVar}" scp $file ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}/hl/network/external-orgs
+
+						if [ "$?" -ne 0 ]; then
+							echo "ERROR: Cannot copy ${file} to ${!containerHostVar} remote host"
+							exit 1
+						fi
+
+						echo
+						echo "$file copied to $containerHostVar"
+						echo
+					else
+						echo
+						echo "$file is already present on $containerHostVar"
+						echo
+					fi
+				fi
+			done
 		}
 		echo $(_jq '.name')
 	done
@@ -139,16 +169,16 @@ function removeOrgEnvironmentData() {
 
 	CURRENT_DIR=$PWD
  
-	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
 	if [ ! -f "$ORG_CONFIG_FILE" ]; then
 		echo
-		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing new orgation configuration"
+		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing organization configuration data"
 		exit 1
 	fi
 
 	source .env
 
-	removeOrgEnvData $NEW_ORG
+	removeOrgEnvData $ORG
 
 	source .env
 }
@@ -165,7 +195,7 @@ function addNetworkEnvDataRemotely() {
 	cerberusOrgDataFile="network-config/cerberusorg-data.json"
 
 	# check if organization data file is present
-	ORG_CONFIG_FILE=external-orgs/${NEW_ORG}-data.json
+	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
 	if [ ! -f "$ORG_CONFIG_FILE" ]; then
 		echo
 		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing organization data and delivering to host machines"
@@ -182,9 +212,9 @@ function addNetworkEnvDataRemotely() {
 		echo "sshpass tool not found"
 		exit 1
 	fi
-
+	
 	# add environment data to each host
-	for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
+	for container in $(echo "${orgContainers}" | jq -r '. | @base64'); do
 		_jq(){
 			echo "here I am"
 			containerNameValue=$(echo "\"$(echo ${orgContainer} | base64 --decode | jq -r ${1})\"")
@@ -195,7 +225,6 @@ function addNetworkEnvDataRemotely() {
 			containerPasswordVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PASSWORD"
 			containerPathVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PATH"
 
-			echo "here"
 			# check if file is present on the remote host and deliver it if it is not
 			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test -e ${!containerPathVar}hl/network/${osDataFile}"
 			result=$?
@@ -232,7 +261,7 @@ function addNetworkEnvDataRemotely() {
 			fi
 
 			# start remote script
-			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "cd ${!containerPathVar}hl/network && ./${NEW_ORG}.sh add-network-env"
+			sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "cd ${!containerPathVar}hl/network && ./${ORG}.sh add-network-env"
 			result=$?
 			echo $result
 
@@ -252,17 +281,17 @@ function addNetworkEnvDataRemotely() {
 function removeNetworkEnvDataRemotely() {
 
 	# check if organization environment variables are set
-	orgUsernameVar="${NEW_ORG^^}_ORG_USERNAME"
-	orgPasswordVar="${NEW_ORG^^}_ORG_PASSWORD"
-	orgHostVar="${NEW_ORG^^}_ORG_IP"
-	orgHostPathVar="${NEW_ORG^^}_ORG_HOSTPATH"
+	orgUsernameVar="${ORG^^}_ORG_USERNAME"
+	orgPasswordVar="${ORG^^}_ORG_PASSWORD"
+	orgHostVar="${ORG^^}_ORG_IP"
+	orgHostPathVar="${ORG^^}_ORG_HOSTPATH"
 
 	source .env
 
 	if [ -z "${!orgUsernameVar}" ] || [ -z "${!orgPasswordVar}" ] || [ -z "${!orgHostVar}" ] || [ -z "${!orgHostPathVar}" ]; then
 		echo "Required organization environment data is not present. Obtaining ... "
 
-		addEnvironmentData $NEW_ORG
+		addEnvironmentData $ORG
 	fi      
 
 	source .env
@@ -274,13 +303,13 @@ function removeNetworkEnvDataRemotely() {
 		exit 1
 	fi      
 
-	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./${NEW_ORG}.sh remove-network-env"
+	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./${ORG}.sh remove-network-env"
 	if [ "$?" -ne 0 ]; then
-		echo "Cerberus network environment data is not removed from ${NEW_ORG^} host"
+		echo "Cerberus network environment data is not removed from ${ORG^} host"
 		exit 1
 	fi      
 
-	echo "Cerberus network environment data successfully removed from ${NEW_ORG^} hosts"
+	echo "Cerberus network environment data successfully removed from ${ORG^} hosts"
 }
 
 function addOrgHostsToCerberus() {
@@ -288,37 +317,37 @@ function addOrgHostsToCerberus() {
 	source ~/.profile
 	source .env
 
-	orgHostVar="${NEW_ORG^^}_ORG_IP"
+	orgHostVar="${ORG^^}_ORG_IP"
 
 	if [ -z "${!orgHostVar}" ]; then
 		echo "Required organization environment data is not present. Obtaining ... "
 
-		addEnvironmentData $NEW_ORG
+		addEnvironmentData $ORG
 	fi
 
 	source .env
 
-	addExtraHostsToOs $NEW_ORG
-	addExtraHostsToNetworkOrg $NEW_ORG
+	addExtraHostsToOs $ORG
+	addExtraHostsToNetworkOrg $ORG
 
-	orgNameVar="${NEW_ORG^^}_ORG_NAME"
+	orgNameVar="${ORG^^}_ORG_NAME"
 	echo "Organization ${!orgNameVar} extra hosts added successfully to Cerberusntw network configuration files"
 }
 
 function addNetworkHostsRemotely() {
 
 	# check if organization environment variables are set
-	orgUsernameVar="${NEW_ORG^^}_ORG_USERNAME"
-	orgPasswordVar="${NEW_ORG^^}_ORG_PASSWORD"
-	orgHostVar="${NEW_ORG^^}_ORG_IP"
-	orgHostPathVar="${NEW_ORG^^}_ORG_HOSTPATH"
+	orgUsernameVar="${ORG^^}_ORG_USERNAME"
+	orgPasswordVar="${ORG^^}_ORG_PASSWORD"
+	orgHostVar="${ORG^^}_ORG_IP"
+	orgHostPathVar="${ORG^^}_ORG_HOSTPATH"
 
 	source .env
 
 	if [ -z "${!orgUsernameVar}" ] || [ -z "${!orgPasswordVar}" ] || [ -z "${!orgHostVar}" ] || [ -z "${!orgHostPathVar}" ]; then
 		echo "Required organization environment data is not present. Obtaining ... "
 
-		addEnvironmentData $NEW_ORG
+		addEnvironmentData $ORG
 	fi
 
 	source .env
@@ -330,7 +359,7 @@ function addNetworkHostsRemotely() {
 		exit 1
 	fi
 
-	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./${NEW_ORG}.sh add-network-hosts"
+	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./${ORG}.sh add-network-hosts"
 	if [ "$?" -ne 0 ]; then
 		echo "ERROR: Unable to add network hosts to organization remotely"
 		exit 1
@@ -342,17 +371,17 @@ function addNetworkHostsRemotely() {
 function removeNetworkHostsRemotely() {
 
 	# check if organization environment variables are set
-	orgUsernameVar="${NEW_ORG^^}_ORG_USERNAME"
-	orgPasswordVar="${NEW_ORG^^}_ORG_PASSWORD"
-	orgHostVar="${NEW_ORG^^}_ORG_IP"
-	orgHostPathVar="${NEW_ORG^^}_ORG_HOSTPATH"
+	orgUsernameVar="${ORG^^}_ORG_USERNAME"
+	orgPasswordVar="${ORG^^}_ORG_PASSWORD"
+	orgHostVar="${ORG^^}_ORG_IP"
+	orgHostPathVar="${ORG^^}_ORG_HOSTPATH"
 
 	source .env
 
 	if [ -z "${!orgUsernameVar}" ] || [ -z "${!orgPasswordVar}" ] || [ -z "${!orgHostVar}" ] || [ -z "${!orgHostPathVar}" ]; then
 		echo "Required organization environment data is not present. Obtaining ... "
     
-		addEnvironmentData $NEW_ORG
+		addEnvironmentData $ORG
 	fi      
 
 	source .env
@@ -364,7 +393,7 @@ function removeNetworkHostsRemotely() {
 		exit 1
 	fi      
 
-	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./${NEW_ORG}.sh remove-network-hosts"
+	sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network && ./${ORG}.sh remove-network-hosts"
 	if [ "$?" -ne 0 ]; then
 		echo "ERROR: Unable to add network hosts to organization remotely"
 		exit 1
@@ -376,13 +405,13 @@ function removeNetworkHostsRemotely() {
 	getVal=$(sshpass -p "${!orgPasswordVar}" ssh ${!orgUsernameVar}@${!orgHostVar} "cd ${!orgHostPathVar}/hl/network/scripts && ./testEnvVar.sh CERBERUS_OS_IP")
 
 	if [ "${getVal}" != "not set" ]; then
-		orgNameVar="${NEW_ORG^^}_ORG_NAME"
+		orgNameVar="${ORG^^}_ORG_NAME"
     
 		echo
 		echo "========="
 		echo "NOTE:"
 		echo "Cerberus network environment variables are still set on ${!orgNameVar} host machine."
-		echo "You can remove them remotely by calling \" ./cerberusntw.sh remove-netenv-remotely -n ${NEW_ORG}\""
+		echo "You can remove them remotely by calling \" ./cerberusntw.sh remove-netenv-remotely -n ${ORG}\""
 	fi      
 }
 
@@ -394,7 +423,7 @@ function deliverOrgArtifacts() {
 		exit 1
 	fi      
     
-	orgUsername="${NEW_ORG^^}_ORG_USERNAME"
+	orgUsername="${ORG^^}_ORG_USERNAME"
 	artifactsLocation=/home/${!orgUsername}/server/go/src/cerberus
 }       
 
@@ -419,8 +448,8 @@ function connectToChannels() {
 
 	for channel in $channels; do
 		if [ "$channel" == "pers" ]; then
-			echo "Connecting ${NEW_ORG^} to Cerberus Network channel: Person Accounts"
-			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToPersonAccChannel.sh $NEW_ORG $PERSON_ACCOUNTS_CHANNEL
+			echo "Connecting ${ORG^} to Cerberus Network channel: Person Accounts"
+			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToPersonAccChannel.sh $ORG $PERSON_ACCOUNTS_CHANNEL
 
 			if [ $? -ne 0 ]; then
 				echo "Unable to create config tx for ${PERSON_ACCOUNTS_CHANNEL}"
@@ -428,8 +457,8 @@ function connectToChannels() {
 			fi
 
 		 elif [ "$channel" == "inst" ]; then
-			echo "Connecting ${NEW_ORG^} to Cerberus Network channel: Institution Accounts"
-			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToInstitutionAccChannel.sh $NEW_ORG $INSTITUTION_ACCOUNTS_CHANNEL
+			echo "Connecting ${ORG^} to Cerberus Network channel: Institution Accounts"
+			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToInstitutionAccChannel.sh $ORG $INSTITUTION_ACCOUNTS_CHANNEL
 
 			if [ $? -ne 0 ]; then
 				echo "Unable to create config tx for ${INSTITUTION_ACCOUNTS_CHANNEL}"
@@ -437,8 +466,8 @@ function connectToChannels() {
 			fi
 
 		elif [ "$channel" == "int" ]; then
-			echo "Connecting ${NEW_ORG^} to Cerberus Network channel: Integration Accounts"
-			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToIntegrationAccChannel.sh $NEW_ORG $INTEGRATION_ACCOUNTS_CHANNEL
+			echo "Connecting ${ORG^} to Cerberus Network channel: Integration Accounts"
+			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToIntegrationAccChannel.sh $ORG $INTEGRATION_ACCOUNTS_CHANNEL
 
 			if [ $? -ne 0 ]; then
 				echo "Unable to create config tx for ${INTEGRATION_ACCOUNTS_CHANNEL}"
@@ -455,7 +484,7 @@ function disconnectOrg() {
 
 	. scripts/disconnectOrg.sh
 
-	removeExternalOrgArtifacts $NEW_ORG
+	removeExternalOrgArtifacts $ORG
 }
 
 function parseYaml {

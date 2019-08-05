@@ -28,7 +28,7 @@ function printHelp() {
 	echo
 	echo
 	echo "	deliver-network-data -o <organization-name>"
-	echo "		Checks if organization data is set in environment variaons"
+	echo "		Checks if organization data is set in environment variables"
 	echo "		Delivers Cerberus network hosts data to external organization host machines"
 	echo
 	echo 
@@ -81,7 +81,8 @@ function askProceed() {
 
 CHANNELS_LIST=''
 CHANNEL_NAME=''
-NEW_ORG=''
+ORG=''
+ENTITY=''
 
 # Parse commandline args
 if [ "$1" = "-m" ]; then # supports old usage, muscle memory is powerful!
@@ -120,6 +121,21 @@ elif [ "$MODE" == "add-org-env" ]; then
 elif [ "$MODE" == "remove-org-env" ]; then
 	EXPMODE="Removing organization environment data"
 
+# ./operatecntw.sh add-org-extra-hosts -o sipher
+elif [ "$MODE" == "add-org-extra-hosts" ]; then
+	EXPMODE="Adding external organization extra hosts to Cerberus configuration files"
+
+# ./operatenctw.sh remove-org-extra-hosts -o sipher
+elif [ "$MODE" == "remove-org-extra-hosts" ]; then
+	EXPMODE="Removing external organization extra hosts from Cerberus configuration files"
+
+
+
+
+
+
+##############################################################################
+
 # ./operatecntw.sh add-netenv-remotely -o sipher
 elif [ "$MODE" == "add-netenv-remotely" ]; then
 	echo "This command will successfully add Cerberus network environment data to organization peers host machines remotely if network configuration files are present on them inside \"network-config/\" folder. If you are not certain about this run \"./operatecntw.sh deliver-network-data -o <organization-name>\" first."
@@ -131,14 +147,6 @@ elif [ "$MODE" == "add-netenv-remotely" ]; then
 # ./cerberusntw.sh remove-netenv-remotely -n sipher
 elif [ "$MODE" == "remove-netenv-remotely" ]; then
 	EXPMODE="Removing network environment data from organization host remotely"
-
-# ./cerberusntw.sh add-org-hosts -n sipher
-elif [ "$MODE" == "add-org-hosts" ]; then
-	EXPMODE="Adding organization hosts to local host containers"
-
-# ./cerberusntw.sh remove-org-hosts -n sipher
-elif [ "$MODE" == "remove-org-hosts" ]; then
-	EXPMODE="Removing organization hosts from local host containers"
 
 # ./cerberusntw.sh add-network-hosts-remotely -n sipher
 elif [ "$MODE" == "add-network-hosts-remotely" ]; then
@@ -183,7 +191,7 @@ else
 	exit 1
 fi
 
-while getopts "h?c:t:d:f:n:l:i:o:v" opt; do
+while getopts "h?c:t:d:e:f:n:l:i:o:v" opt; do
 	case "$opt" in
 	h | \?)
 		printHelp
@@ -198,11 +206,14 @@ while getopts "h?c:t:d:f:n:l:i:o:v" opt; do
 	d)      
 		CLI_DELAY=$OPTARG
 		;;
+	e)
+		ENTITY=$OPTARG
+		;;
 	f)      
 		COMPOSE_FILE=$OPTARG
 		;;
 	n)      
-		NEW_ORG=$OPTARG
+		ORG=$OPTARG
 		;;
 	l)      
 		CHANNELS_LIST=$OPTARG
@@ -277,6 +288,18 @@ elif [ "${MODE}" == "remove-org-env" ]; then
 	fi
 
 	removeOrgEnvironmentData
+
+# ./operatecntw.sh add-org-extra-hosts
+elif [ "${MODE}" == "add-org-extra-hosts" ]; then
+
+	# check if organization option tag is provided
+	if [ -z "$
+
+
+
+
+
+
 
 # ./operatecntw.sh add-netenv-remotely -n sipher
 elif [ "${MODE}" == "add-netenv-remotely" ]; then

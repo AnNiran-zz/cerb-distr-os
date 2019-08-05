@@ -1,0 +1,38 @@
+{
+	"label": "whitebox",
+	"containers": [
+		{
+			"name": "anchorpr",
+			"container": "anchorpr.whitebox.cerberus.net",
+			"host": "149.28.196.252",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "lead0pr",
+			"container": "lead0pr.whitebox.cerberus.net",
+			"host": "149.28.196.252",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{	
+			"name": "lead1pr",
+			"container": "lead1pr.whitebox.cerberus.net",
+			"host": "149.28.196.252",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "communicatepr",
+			"container": "communicatepr.whitebox.cerberus.net",
+			"host": "149.28.196.252",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		}
+	]
+}
+

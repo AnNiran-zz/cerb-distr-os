@@ -1,0 +1,37 @@
+{
+	"label": "violet",
+	"containers": [
+		{
+			"name": "anchorpr",
+			"container": "anchorpr.violet.cerberus.net",
+			"host": "000.11.000.111",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "lead0pr",
+			"container": "lead0pr.violet.cerberus.net",
+			"host": "000.11.000.111",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "lead1pr",
+			"container": "lead1pr.violet.cerberus.net",
+			"host": "000.11.000.111",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		},
+		{
+			"name": "communicatepr",
+			"container": "communicatepr.violet.cerberus.net",
+			"host": "000.11.000.111",
+			"username": "anniran",
+			"password": "9anna8925lva",
+			"path": "/home/anniran/server/go/src/cerberus/"
+		}
+	]
+}
