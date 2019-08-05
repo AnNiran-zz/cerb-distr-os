@@ -24,7 +24,40 @@ function addOrgEnvironmentData() {
 
 	source .env
 
-	addOrgEnvData $NEW_ORG
+	addOrgEnvData $ORG
+}
+
+function checkOrgEnvironmentData() {
+
+	# read data inside external-orgs folder
+	ARCH=$(uname -s | grep Darwin)
+	if [ "$ARCH" == "Darwin" ]; then
+		OPTS="-it"
+	else
+		OPTS="-i"
+	fi
+
+	CURRENT_DIR=$PWD
+
+	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
+	if [ ! -f "$ORG_CONFIG_FILE" ]; then
+		echo
+		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing new organization configuration"
+		exit 1
+	fi
+
+	source .env
+
+	# check if environment variables for organization are set
+	orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+	orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
+	orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
+
+	if [ -z "${!orgLabelVar}" ]; then
+		echo "Required organization environment data is missing. Obtaining ... "
+		addOrgEnvironmentData
+		source .env
+	fi
 }
 
 # deliver cerberus network organization and ordering service data to external organization remote hosts
@@ -32,6 +65,8 @@ function deliverNetworkData() {
 
 	# check if organization environment variables are present
 	addOrgEnvironmentData
+
+	source .env
 
 	echo
 	echo
@@ -181,6 +216,27 @@ function removeOrgEnvironmentData() {
 	removeOrgEnvData $ORG
 
 	source .env
+}
+
+
+function addExternalOrgExtraHosts() {
+	
+	# read data inside external-orgs folder
+	ARCH=$(uname -s | grep Darwin)
+	if [ "$ARCH" == "Darwin" ]; then
+		OPTS="-it"
+	else
+		OPTS="-i"
+	fi
+
+	CURRENT_DIR=$PWD
+
+	checkOrgEnvironmentData
+	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
+
+	addExtraHostsToOs $ORG_CONFIG_FILE
+	addExtraHostsToNetworkOrg $ORG_CONFIG_FILE
+
 }
 
 function addNetworkEnvDataRemotely() {

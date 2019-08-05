@@ -222,7 +222,7 @@ while getopts "h?c:t:d:e:f:n:l:i:o:v" opt; do
 		IMAGETAG=$(go env GOARCH)"-"$OPTARG
 		;;
 	o)      
-		NEW_ORG=$OPTARG
+		ORG=$OPTARG
 		;;
 	v)      
 		VERBOSE=true
@@ -257,8 +257,8 @@ elif [ "${MODE}" == "generate" ]; then
 # ./operatecntw.sh deliver-network-data -o sipher
 elif [ "${MODE}" == "deliver-network-data" ]; then
 	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-o' option tag"
+	if [ -z "$ORG" ]; then
+		echo "Please provide organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
@@ -269,8 +269,8 @@ elif [ "${MODE}" == "deliver-network-data" ]; then
 elif [ "${MODE}" == "add-org-env" ]; then
 
 	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-o' option tag"
+	if [ -z "$ORG" ]; then
+		echo "Please provide organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
@@ -281,8 +281,8 @@ elif [ "${MODE}" == "add-org-env" ]; then
 elif [ "${MODE}" == "remove-org-env" ]; then
 
 	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-o' option tag"
+	if [ -z "$ORG" ]; then
+		echo "Please provide organization name with '-o' option tag"
 		printHelp
 		exit 1
 	fi
@@ -293,8 +293,13 @@ elif [ "${MODE}" == "remove-org-env" ]; then
 elif [ "${MODE}" == "add-org-extra-hosts" ]; then
 
 	# check if organization option tag is provided
-	if [ -z "$
+	if [ -z "$ORG" ]; then
+		echo "Please provide organization name with '-o' option tag"
+		printHelp
+		exit 1
+	fi
 
+	addExternalOrgExtraHosts
 
 
 
