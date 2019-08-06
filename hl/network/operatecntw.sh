@@ -275,7 +275,8 @@ elif [ "${MODE}" == "add-org-env" ]; then
 		exit 1
 	fi
 
-	addOrgEnvironmentData
+	bash scripts/addOrgEnvData.sh $ORG
+
 
 # ./operatecntw.sh remove-org-env -o sipher
 elif [ "${MODE}" == "remove-org-env" ]; then
@@ -287,7 +288,8 @@ elif [ "${MODE}" == "remove-org-env" ]; then
 		exit 1
 	fi
 
-	removeOrgEnvironmentData
+	bash scripts/removeOrgEnvData.sh $ORG
+
 
 # ./operatecntw.sh add-org-extra-hosts
 elif [ "${MODE}" == "add-org-extra-hosts" ]; then
@@ -423,14 +425,13 @@ elif [ "${MODE}" == "getorgartifacts" ]; then
 elif [ "${MODE}" == "test" ]; then
 
 	# check if channel option tag is provided
-	#if [ -z "$CHANNELS_LIST" ]; then
-	#       echo "Please provide a channels list with '-l' option tag"
-	#       exit 1
-	#fi
+	if [ -z "$ORG" ]; then
+	       echo "Please provide organization name with '-o' option tag"
+	       exit 1
+	fi
 
-	#parseChannelNames $CHANNELS_LIST
+	bash scripts/addOrgEnvData.sh $ORG
 
-	checkOrgEnvForSsh
 
 elif [ "${MODE}" == "connectorg" ]; then
 

@@ -3,30 +3,6 @@
 . scripts/addOrgData.sh
 . scripts/removeOrgData.sh
 
-function addOrgEnvironmentData() {
-
-	# read data inside external-orgs folder
- 	ARCH=$(uname -s | grep Darwin)
-	if [ "$ARCH" == "Darwin" ]; then
-		OPTS="-it"
-	else
-		OPTS="-i"
-	fi
-
-	CURRENT_DIR=$PWD
-
- 	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
-	if [ ! -f "$ORG_CONFIG_FILE" ]; then
-		echo
-		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing new orgation configuration"
-		exit 1
-	fi
-
-	source .env
-
-	addOrgEnvData $ORG
-}
-
 function checkOrgEnvironmentData() {
 
 	# read data inside external-orgs folder
@@ -190,32 +166,6 @@ function deliverNetworkData() {
 		}
 		echo $(_jq '.name')
 	done
-}
-
-function removeOrgEnvironmentData() {
-	
-	# read data inside external-orgs folder
-	ARCH=$(uname -s | grep Darwin)
-	if [ "$ARCH" == "Darwin" ]; then
-		OPTS="-it"
-	else
-		OPTS="-i"
-	fi
-
-	CURRENT_DIR=$PWD
- 
-	ORG_CONFIG_FILE=external-orgs/${ORG}-data.json
-	if [ ! -f "$ORG_CONFIG_FILE" ]; then
-		echo
-		echo "ERROR: $ORG_CONFIG_FILE file not found. Cannot proceed with parsing organization configuration data"
-		exit 1
-	fi
-
-	source .env
-
-	removeOrgEnvData $ORG
-
-	source .env
 }
 
 
