@@ -22,8 +22,6 @@ function addEnvVariable() {
 	source .env
 }
 
-org=$1
-
 ARCH=$(uname -s | grep Darwin)
 if [ "$ARCH" == "Darwin" ]; then
 	OPTS="-it"
@@ -33,7 +31,7 @@ fi
 
 CURRENT_DIR=$PWD
 
-ORG_CONFIG_FILE=external-orgs/${org}-data.json
+ORG_CONFIG_FILE=$1
  
 if [ ! -f "$ORG_CONFIG_FILE" ]; then
 	echo
@@ -44,6 +42,13 @@ fi
 source .env
 
 orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+result=$?
+
+if [ $result -ne 0 ]; then
+	echo "ERROR: File format for $ORG_CONFIG_FILE does no match expected"
+	exit 1
+fi
+
 orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
 orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 
@@ -51,6 +56,12 @@ orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 addEnvVariable $orgLabelValueStripped "${orgLabelValueStripped^^}_ORG_LABEL" "${!orgLabelVar}"
 
 orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
+result=$?
+
+if [ $result -ne 0 ]; then
+        echo "ERROR: File format for $ORG_CONFIG_FILE does no match expected"
+        exit 1
+fi
 
 for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
 	_jq(){
@@ -105,6 +116,6 @@ done
 
 #source .env
 
-echo "### Organization ${org^^} environment data added successfully to Cerberusntw network"
+echo "### Organization ${orgLabelValueStripped^^} environment data added successfully to Cerberusntw network"
 
 

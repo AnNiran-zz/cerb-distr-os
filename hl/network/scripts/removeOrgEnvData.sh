@@ -1,7 +1,5 @@
 #!/bin/bash
 
-org=$1
-
 function removeEnvVariable() {
 	varName=$1
 	currentValue=$2
@@ -26,7 +24,7 @@ fi
 
 CURRENT_DIR=$PWD
 
-ORG_CONFIG_FILE=external-orgs/${org}-data.json
+ORG_CONFIG_FILE=$1
 
 if [ ! -f "$ORG_CONFIG_FILE" ]; then
 	echo
@@ -38,6 +36,13 @@ source .env
 source ~/.profile
 
 orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
+result=$?
+
+if [ $result -ne 0 ]; then
+        echo "ERROR: File format for $ORG_CONFIG_FILE does no match expected"
+        exit 1
+fi
+
 orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
 orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 
@@ -45,6 +50,12 @@ orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 removeEnvVariable "${orgLabelValueStripped^^}_ORG_LABEL" "${!orgLabelVar}"
  
 orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
+result=$?
+
+if [ $result -ne 0 ]; then
+        echo "ERROR: File format for $ORG_CONFIG_FILE does no match expected"
+        exit 1
+fi
 
 for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
 	_jq(){
@@ -87,6 +98,6 @@ for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
 	echo $(_jq '.name')
 done
 
-echo "Organization ${org^} environment data successfully removed from Cerberus network"
+echo "Organization ${orgLabelValueStripped^^} environment data successfully removed from Cerberus network"
 
 

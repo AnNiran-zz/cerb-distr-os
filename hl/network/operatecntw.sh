@@ -27,19 +27,42 @@ function printHelp() {
 	echo "		Deletes all created certificates and genesis block for channels PersonAccounts, InstitutionAccounts and IntegrationAccounts"
 	echo
 	echo
-	echo "	deliver-network-data -o <organization-name>"
-	echo "		Checks if organization data is set in environment variables"
-	echo "		Delivers Cerberus network hosts data to external organization host machines"
+	echo "	deliver-network-data"
+	echo "          Checks if organization data is set in environment variables"
+        echo "          Delivers Cerberus network hosts data to external organization host machines"
+	echo "		To deliver network data to a single organization:"
+	echo "		-o <organization-name>"
+	echo "		To deliver network data to all organizations inside external-orgs/ folder:"
+	echo "		-o all"
 	echo
 	echo 
-	echo "	add-org-env -o <organization-name>"
+	echo "	add-org-env"
 	echo "		Adds organization host machines data to environemnt configuration file"
+	echo "		To add environment data for a single organization:"
+	echo "		-o <organization-name>"
+	echo "		To add environment data for all organizaitons in external-orgs/ folder:"
+	echo "		-o all"
 	echo
 	echo
-	echo "	remove-org-env -o <organization-name>"
+	echo "	remove-org-env"
 	echo "		Removes organization host machines data from environment configuration file"
+	echo "          To add environment data for a single organization:"
+        echo "          -o <organization-name>"
+        echo "          To add environment data for all organizaitons in external-orgs/ folder:"
+        echo "          -o all"
 	echo
 	echo
+	echo "	add-org-extra-hosts -o <organization-name>"
+	echo "		Adds organization extra hosts to Cerberus network organization and Ordering Service instances configuration files"
+	echo
+	echo
+	echo "  remove-org-extra-hosts -o <organization-name>"
+        echo "          Removes organization extra hosts from Cerberus network organization and Ordering Service instances configuration files"
+        echo
+	echo
+	echo
+	echo
+
 	echo "	add-netenv-remotely -o <organization-name>"
 	echo "		Add Cerberus network environment data to organization peers host machines remotely by starting predefined scripts on remote machines"
 	echo
@@ -263,7 +286,18 @@ elif [ "${MODE}" == "deliver-network-data" ]; then
 		exit 1
 	fi
 
-	deliverNetworkData
+	if [ "${ORG}" == "all" ]; then
+		# deliver network data to all organizations
+		for file in external-orgs/*-data.json; do
+			bash scripts/deliverNetworkData.sh $file
+		done
+
+	else
+		# deliver network data to a single organization
+		orgConfigFile="external-orgs/${ORG}-data.json"
+
+		bash scripts/deliverNetworkData.sh $orgConfigFile
+	fi
 
 # ./operatecntw.sh addorgenv -o sipher
 elif [ "${MODE}" == "add-org-env" ]; then
@@ -275,7 +309,16 @@ elif [ "${MODE}" == "add-org-env" ]; then
 		exit 1
 	fi
 
-	bash scripts/addOrgEnvData.sh $ORG
+	if [ "${ORG}" == "all" ]; then
+		# add environment data for all organizarions
+		for file in external-orgs/*-data.json; do
+			bash scripts/addOrgEnvData.sh $file
+		done
+	else
+		# add environment data for a single organization
+		orgConfigFile="external-orgs/${ORG}-data.json"
+		bash scripts/addOrgEnvData.sh $orgConfigFile
+	fi
 
 
 # ./operatecntw.sh remove-org-env -o sipher
@@ -288,7 +331,16 @@ elif [ "${MODE}" == "remove-org-env" ]; then
 		exit 1
 	fi
 
-	bash scripts/removeOrgEnvData.sh $ORG
+	if [ "${ORG}" == "all" ]; then
+                # add environment data for all organizarions
+                for file in external-orgs/*-data.json; do
+                        bash scripts/removeOrgEnvData.sh $file
+                done
+        else
+                # add environment data for a single organization
+                orgConfigFile="external-orgs/${ORG}-data.json"
+                bash scripts/removeOrgEnvData.sh $orgConfigFile
+        fi
 
 
 # ./operatecntw.sh add-org-extra-hosts
@@ -301,8 +353,30 @@ elif [ "${MODE}" == "add-org-extra-hosts" ]; then
 		exit 1
 	fi
 
-	addExternalOrgExtraHosts
+	bash scripts/addOrgExtraHosts.sh $ORG
 
+# ./operatecntw.sh remove-org-extra-hosts 
+elif [ "${MODE}" == "remove-org-extra-hosts" ]; then
+
+	        # check if organization option tag is provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
+
+        bash scripts/removeOrgExtraHosts.sh $ORG
+
+###################################################################
+# Remote operations
+# Following starts scripts on remote host machines and perform actions on behalf of organizations hosts
+
+
+
+
+
+
+##################################################################
 
 
 
@@ -337,37 +411,6 @@ elif [ "${MODE}" == "remove-netenv-remotely" ]; then
 	
 	removeNetworkEnvDataRemotely
 
-# ./cerberusntw.sh add-org-hosts -n sipher
-elif [ "${MODE}" == "add-org-hosts" ]; then
-
-	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
-		printHelp
-		exit 1
-	fi
-	
-	addOrgHostsToCerberus
-
-# ./cerberusntw.sh remove-org-hosts -n sipher
-elif [ "${MODE}" == "remove-org-hosts" ]; then
-
-	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
-		printHelp
-		exit 1
-	fi
-
-	source ~/.profile
-
-	removeOrgHostsFromOs $NEW_ORG
-	removeOrgHostsFromNetworkOrg $NEW_ORG
-
-	orgNameVar="${NEW_ORG^^}_ORG_NAME"
-	if [ ! -z "${!orgNameVar}" ]; then
-		echo "$NEW_ORG environment data is still present. You can remove it by running ./cerberusntw.sh removeorgenv -n $NEW_ORG"
-	fi
 
 # ./cerberusntw.sh add-network-hosts-remotely -n sipher
 elif [ "${MODE}" == "add-network-hosts-remotely" ]; then

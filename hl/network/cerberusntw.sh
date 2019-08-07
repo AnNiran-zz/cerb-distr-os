@@ -26,9 +26,6 @@
 # we are able to launch our network.  More detail on the tools and the structure of
 # the network will be provided later in this document.  For now, let's get going...
 
-. scripts/addOrgData.sh
-. scripts/removeOrgData.sh
-
 function clearContainers() {
 	
 	CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /dev-*.*.personaccountscc.*/) {print $1}')
