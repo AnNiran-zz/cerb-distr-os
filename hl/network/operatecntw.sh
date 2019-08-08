@@ -28,8 +28,8 @@ function printHelp() {
 	echo
 	echo
 	echo "	deliver-network-data"
-	echo "          Checks if organization data is set in environment variables"
-        echo "          Delivers Cerberus network hosts data to external organization host machines"
+	echo "		Checks if organization data is set in environment variables"
+        echo "		Delivers Cerberus network hosts data to external organization host machines"
 	echo "		To deliver network data to a single organization:"
 	echo "		-o <organization-name>"
 	echo "		To deliver network data to all organizations inside external-orgs/ folder:"
@@ -46,27 +46,92 @@ function printHelp() {
 	echo
 	echo "	remove-org-env"
 	echo "		Removes organization host machines data from environment configuration file"
-	echo "          To add environment data for a single organization:"
-        echo "          -o <organization-name>"
-        echo "          To add environment data for all organizaitons in external-orgs/ folder:"
-        echo "          -o all"
+	echo "		To add environment data for a single organization:"
+        echo "		-o <organization-name>"
+        echo "		To add environment data for all organizaitons in external-orgs/ folder:"
+        echo "		-o all"
 	echo
 	echo
 	echo "	add-org-extra-hosts -o <organization-name>"
 	echo "		Adds organization extra hosts to Cerberus network organization and Ordering Service instances configuration files"
 	echo
 	echo
-	echo "  remove-org-extra-hosts -o <organization-name>"
-        echo "          Removes organization extra hosts from Cerberus network organization and Ordering Service instances configuration files"
+	echo "	remove-org-extra-hosts -o <organization-name>"
+        echo "		Removes organization extra hosts from Cerberus network organization and Ordering Service instances configuration files"
         echo
 	echo
+	echo "	add-env-r"
+	echo "		Adds Cerberus organization, Ordering Service instances and organizations environment data to organization remotely"
+	echo "		To add the data to a single organization:"
+	echo "		-o <destination-organization-name>"
+	echo "		To add the data to all organizations:"
+	echo "		-o all"
+	echo "		To add environment data for Cerberus network and Ordering Service instances:"
+	echo "		-e cerb"
+	echo "		To add environment data remotely for all external organizations:"
+	echo "		-e ext"
+	echo "		To add environment data remotely for a specific external organization:"
+	echo "		-e <organization-name>"
+	echo "		To add environment data remotely for all entities:"
+	echo "		-e all"
+	echo "		Example:"
+	echo "		./operatecntw.sh add-env-r -o myOrganization -e ext"
+	echo
+        echo "	remove-env-r"
+        echo "		Removes Cerberus organization, Ordering Service instances and organizations environment data from organization remotely"
+        echo "		To remove the data from a single organization:"
+        echo "		-o <destination-organization-name>"
+        echo "		To remove the data from all organizations:"
+        echo "		-o all"
+        echo "		To remove environment data for Cerberus network and Ordering Service instances:"
+        echo "		-e cerb"
+        echo "		To remove environment data remotely for all external organizations:"
+        echo "		-e ext"
+        echo "		To remove environment data remotely for a specific external organization:"
+        echo "		-e <organization-name>"
+        echo "		To remove environment data remotely for all entities:"
+        echo "		-e all"
+        echo "		Example:"
+        echo "		./operatecntw.sh remove-env-r -o myOrganization -e ext"
+	echo
+	echo
+	echo "	update-env-r"
+        echo "		Updates Cerberus organization, Ordering Service instances and organizations environment data for organization remotely"
+        echo "		To update the data on a single organization:"
+        echo "		-o <destination-organization-name>"
+        echo "		To update the data on all organizations:"
+        echo "		-o all"
+        echo "		To update environment data for Cerberus network and Ordering Service instances:"
+        echo "		-e cerb"
+        echo "		To update environment data remotely for all external organizations:"
+        echo "		-e ext"
+        echo "		To update environment data remotely for a specific external organization:"
+        echo "		-e <organization-name>"
+        echo "		To update environment data remotely for all entities:"
+        echo "		-e all"
+        echo "		Example:"
+        echo "		./operatecntw.sh update-env-r -o myOrganization -e ext"
+	echo
+	echo "	add-extra-hosts-r"
+	echo "		Adds Cerberus network, Ordering Service instances and external organizations extra hosts to desitnation host machines"
+	echo "		To add extra hosts on a single organization:"
+	echo "		-o <organization-name>"
+	echo "		To add extra hosts on all external organizations:"
+	echo "		-o all"
+	echo "		To add extra hosts for Cerberus network organization and Ordering Service instances:"
+	echo "		-e cerb"
+	echo "		To add extra hosts for all external organizations:"
+	echo "		-e ext"
+	echo "		To add extra hosts gor Cerberus network organization, Ordering Service instances and all external organizations:"
+	echo "		-e network"
+	echo "		To add extra hosts for specific organization:"
+	echo "		-e <organization-name>"
+	echo "		Example:"
+	echo "		./operatecntw.sh add-extra-hosts-r -o myOrganization -e cerb"
 	echo
 	echo
 
-	echo "	add-netenv-remotely -o <organization-name>"
-	echo "		Add Cerberus network environment data to organization peers host machines remotely by starting predefined scripts on remote machines"
-	echo
-	echo
+
 	echo "	help"
 	echo "		Displays this message"
 	echo
@@ -152,32 +217,23 @@ elif [ "$MODE" == "add-org-extra-hosts" ]; then
 elif [ "$MODE" == "remove-org-extra-hosts" ]; then
 	EXPMODE="Removing external organization extra hosts from Cerberus configuration files"
 
+# ./operatecntw.sh add-env-r
+elif [ "$MODE" == "add-env-r" ]; then
+	EXPMODE="Adding environment data to organization remotely"
 
+# ./operatecntw.sh remove-env-r
+elif [ "${MODE}" == "remove-env-r" ]; then
+	EXPMODE="Removing environment data from organization remotely"
 
+# ./operatecntw.sh update-env-r
+elif [ "$MODE" == "update-env-r" ]; then
+	EXPMODE="Updating environment data on organization hosts remotely"
 
-
+# ./operatecntw.sh add-extra-hosts-r
+elif [ "$MODE" == "add-extra-hosts-r" ]; then
+	EXPMODE="Adding extra hosts to destination hosts remotely"
 
 ##############################################################################
-
-# ./operatecntw.sh add-netenv-remotely -o sipher
-elif [ "$MODE" == "add-netenv-remotely" ]; then
-	echo "This command will successfully add Cerberus network environment data to organization peers host machines remotely if network configuration files are present on them inside \"network-config/\" folder. If you are not certain about this run \"./operatecntw.sh deliver-network-data -o <organization-name>\" first."
-
-	EXPMODE="Adding network environment data to organization hosts remotely"
-
-
-
-# ./cerberusntw.sh remove-netenv-remotely -n sipher
-elif [ "$MODE" == "remove-netenv-remotely" ]; then
-	EXPMODE="Removing network environment data from organization host remotely"
-
-# ./cerberusntw.sh add-network-hosts-remotely -n sipher
-elif [ "$MODE" == "add-network-hosts-remotely" ]; then
-	EXPMODE="Adding network hosts to organization configuration remotely "
-
-# ./cerberusntw.sh remove-network-hosts-remotely
-elif [ "$MODE" == "remove-network-hosts-remotely" ]; then
-	EXPMODE="Removing network hosts from organization configuration remotely "
 
 
 
@@ -371,76 +427,298 @@ elif [ "${MODE}" == "remove-org-extra-hosts" ]; then
 # Remote operations
 # Following starts scripts on remote host machines and perform actions on behalf of organizations hosts
 
+# add cerberus organization, ordering service instances and external organizations environment to remote organization hosts
+# ./operatecntw.sh add-env-remotely
+elif [ "${MODE}" == "add-env-r" ]; then
 
+	# check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
 
-
-
-
-##################################################################
-
-
-
-
-
-# ./operatecntw.sh add-netenv-remotely -n sipher
-elif [ "${MODE}" == "add-netenv-remotely" ]; then
-
-	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-o' option tag"
-		printHelp
-		exit 1
-	fi
-
-	addNetworkEnvDataRemotely
-
-
-
-
-
-
-# ./cerberusntw.sh remove-netenv-remotely -n sipher
-elif [ "${MODE}" == "remove-netenv-remotely" ]; then
-
-	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
-		printHelp
-		exit 1
-	fi
+	if [ -z "$ENTITY" ]; then
+                echo "Please provide entity setting with '-e' option tag"
+                printHelp
+                exit 1
+        fi
 	
-	removeNetworkEnvDataRemotely
-
-
-# ./cerberusntw.sh add-network-hosts-remotely -n sipher
-elif [ "${MODE}" == "add-network-hosts-remotely" ]; then
-
-	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
+	if [ "${ENTITY}" == "${ORG}" ]; then
+		echo "ERROR: Destination and delivering organization names cannot be the same"
 		printHelp
 		exit 1
 	fi
 
-	addNetworkHostsRemotely
+	if [ "${ORG}" == "all" ]; then
+		# add environment data to all organizations
+		for file in external-orgs/*data.json; do
+			echo "here will be added for all orgs"
+		done
 
-# ./cerberusntw.sh remove-network-hosts-remotely -n sipher
-elif [ "${MODE}" == "remove-network-hosts-remotely" ]; then
+	else
+		if [ "${ENTITY}" == "cerb" ]; then
+			# add cerberus data to destination hosts
+			orgConfigFile=external-orgs/${ORG}-data.json
+			bash scripts/addCerberusDataToOrgRemotely.sh $orgConfigFile "env"
 
-	# check if organization option tag is provided
-	if [ -z "$NEW_ORG" ]; then
-		echo "Please provide a organization name with '-n' option tag"
-		printHelp
-		exit 1
+		elif [ "${ENTITY}" == "ext" ]; then
+			# add external organizations data to destination hosts
+			destOrgConfigFile=external-orgs/${ORG}-data.json
+
+			for file in external-orgs/*data.json; do
+				if [ "$file" == "$destOrgConfigFile" ]; then
+					continue;
+				fi
+
+				bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $file "env"
+			done
+
+		elif [ "${ENTITY}" == "network" ]; then
+			# add cerberus data to destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+                        bash scripts/addCerberusDataToOrgRemotely.sh $destOrgConfigFile "env"
+			
+			# add external organizations data to destination hosts
+			for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $file "env"
+                        done
+
+		else
+			# add specific external organization data to destination hosts
+			destOrgConfigFile=external-orgs/${ORG}-data.json
+                        deliveryOrgConfigFile=external-orgs/${ENTITY}-data.json
+
+                        bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $deliveryOrgConfigFile "env"
+
+		fi
 	fi
 
-	removeNetworkHostsRemotely
+# remove cerberus organization, ordering service instances and external organizations environment data from remote organization hosts
+elif [ "${MODE}" == "remove-env-r" ]; then
+
+	# check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ -z "$ENTITY" ]; then
+                echo "Please provide entity setting with '-e' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ "${ENTITY}" == "${ORG}" ]; then
+                echo "ERROR: Destination and delivering organization names cannot be the same"
+                printHelp
+                exit 1
+        fi
+
+	if [ "${ORG}" == "all" ]; then
+                # remove environment data from all organizations
+                for file in external-orgs/*data.json; do
+                        echo "here will be removed for all orgs"
+                done
+
+        else
+		if [ "${ENTITY}" == "cerb" ]; then
+                        # remove cerberus data from destination hosts
+                        orgConfigFile=external-orgs/${ORG}-data.json
+                        bash scripts/removeCerberusEnvDataFromOrgRemotely.sh $orgConfigFile
+
+		elif [ "${ENTITY}" == "ext" ]; then
+			# remove external organizations data from destination hosts
+			destOrgConfigFile=external-orgs/${ORG}-data.json
+
+                        for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/removeOrganizationEnvDataFromOrgRemotely.sh $destOrgConfigFile $file
+                        done
+
+		 elif [ "${ENTITY}" == "network" ]; then
+                        # remove cerberus data from destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+                        bash scripts/removeCerberusEnvDataFromOrgRemotely.sh $destOrgConfigFile
+
+                        # remove external organizations data from destination hosts
+                        for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/removeOrganizationEnvDataFromOrgRemotely.sh $destOrgConfigFile $file
+                        done
+
+		else
+			# remove specific external organization data from destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+                        deliveryOrgConfigFile=external-orgs/${ENTITY}-data.json
+
+                        bash scripts/removeOrganizationEnvDataFromOrgRemotely.sh $destOrgConfigFile $deliveryOrgConfigFile
+		fi
+	fi
+
+# update cerberus organization, ordering service instances and external organizations environment data on remote hosts
+elif [ "${MODE}" == "update-env-r" ]; then
+
+        # check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ -z "$ENTITY" ]; then
+                echo "Please provide entity setting with '-e' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ "${ENTITY}" == "${ORG}" ]; then
+                echo "ERROR: Destination and delivering organization names cannot be the same"
+                printHelp
+                exit 1
+        fi
+
+	if [ "${ORG}" == "all" ]; then
+                # update environment data to all organizations
+                for file in external-orgs/*data.json; do
+                        echo "here will be updated for all orgs"
+                done
+
+        else
+                if [ "${ENTITY}" == "cerb" ]; then
+                        # update cerberus data on destination hosts
+                        orgConfigFile=external-orgs/${ORG}-data.json
+                        bash scripts/removeCerberusEnvDataFromOrgRemotely.sh $orgConfigFile
+			bash scripts/addCerberusDataToOrgRemotely.sh $orgConfigFile "env"
+
+                elif [ "${ENTITY}" == "ext" ]; then
+                        # update external organizations data on destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+
+                        for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/removeOrganizationEnvDataFromOrgRemotely.sh $destOrgConfigFile $file
+				bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $file "env"
+                        done
+
+                 elif [ "${ENTITY}" == "network" ]; then
+                        # add cerberus data to destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+                        bash scripts/removeCerberusEnvDataFromOrgRemotely.sh $destOrgConfigFile
+			bash scripts/addCerberusDataToOrgRemotely.sh $destOrgConfigFile "env"
+
+                        # add external organizations data to destination hosts
+                        for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/removeOrganizationEnvDataFromOrgRemotely.sh $destOrgConfigFile $file
+				bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $file "env"
+                        done
+
+                else
+                        # add specific external organization data to destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+                        deliveryOrgConfigFile=external-orgs/${ENTITY}-data.json
+
+                        bash scripts/removeOrganizationEnvDataFromOrgRemotely.sh $destOrgConfigFile $deliveryOrgConfigFile
+			bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $deliveryOrgConfigFile "env"
+                fi
+        fi
+
+# add cerberus organization, ordering service instances and external organizations extra hosts to remote organization hosts
+elif [ "${MODE}" == "add-extra-hosts-r" ]; then
+
+	       # check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ -z "$ENTITY" ]; then
+                echo "Please provide entity setting with '-e' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ "${ENTITY}" == "${ORG}" ]; then
+                echo "ERROR: Destination and delivering organization names cannot be the same"
+                printHelp
+                exit 1
+        fi
+
+	if [ "${ORG}" == "all" ]; then
+                # update environment data to all organizations
+                for file in external-orgs/*data.json; do
+                        echo "here will be updated for all orgs"
+                done
+
+        else
+		if [ "${ENTITY}" == "cerb" ]; then
+			# add cerberus organization and ordering service instances extra hosts to organization remote hosts
+			orgConfigFile=external-orgs/${ORG}-data.json
+
+			bash scripts/addCerberusDataToOrgRemotely.sh $orgConfigFile "extrahosts"
+
+		elif [ "${ENTITY}" == "ext" ]; then
+			# add external organizations extra hosts to remote destination hosts
+			destOrgConfigFile=external-orgs/${ORG}-data.json
+
+			for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $file "extrahosts"
+                        done
+
+		elif [ "${ENTITY}" == "network" ]; then
+			# add cerberus organization and ordering service instances extra hosts to organization remote hosts
+			orgConfigFile=external-orgs/${ORG}-data.json
+
+                        bash scripts/addCerberusDataToOrgRemotely.sh $orgConfigFile "extrahosts"
+
+			# add external organizations extra hosts to remote destination hosts
+                        destOrgConfigFile=external-orgs/${ORG}-data.json
+
+                        for file in external-orgs/*data.json; do
+                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                        continue;
+                                fi
+
+                                bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $file "extrahosts"
+                        done
+
+		else
+			# add specific external organizatyion extra hosts to destination host machines
+			destOrgConfigFile=external-orgs/${ORG}-data.json
+                        deliveryOrgConfigFile=external-orgs/${ENTITY}-data.json
+
+			bash scripts/addOrganizationDataToOrgRemotely.sh $destOrgConfigFile $deliveryOrgConfigFile "extrahosts"
+		fi
+	fi
+
+# remove cerberus organization and ordering service extra hosts from remote organization hosts
 
 
-
-
-
-
+# tested until here #
+##################################################################
 
 
 

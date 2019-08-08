@@ -36,10 +36,22 @@ services:
     ports:
     - 7050:7050
     extra_hosts:
-    - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   osinstance1.cerberus.net:
     extends:
       file: ../base/os-base.yaml
@@ -68,10 +80,22 @@ services:
     ports:
     - 7150:7050
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
     - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   osinstance2.cerberus.net:
     extends:
       file: ../base/os-base.yaml
@@ -100,10 +124,22 @@ services:
     ports:
     - 7250:7050
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
     - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   osinstance3.cerberus.net:
     extends:
       file: ../base/os-base.yaml
@@ -132,10 +168,22 @@ services:
     ports:
     - 7350:7050
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
     - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   osinstance4.cerberus.net:
     extends:
       file: ../base/os-base.yaml
@@ -164,10 +212,22 @@ services:
     ports:
     - 7450:7050
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
     - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   zk0:
     extends:
       file: ../base/kafka-base.yaml
@@ -404,5 +464,3 @@ services:
     - zk6
     ports:
     - 9098:9092
-    networks:
-    - cerberusntw

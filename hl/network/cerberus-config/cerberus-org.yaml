@@ -37,10 +37,22 @@ services:
     networks:
     - cerberusntw
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
-    - communicatepr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   leadpr.cerberusorg.cerberus.net:
     container_name: leadpr.cerberusorg.cerberus.net
     extends:
@@ -68,10 +80,22 @@ services:
     networks:
     - cerberusntw
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
     - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   communicatepr.cerberusorg.cerberus.net:
     container_name: communicatepr.cerberusorg.cerberus.net
     extends:
@@ -99,10 +123,22 @@ services:
     networks:
     - cerberusntw
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
-    - communicatepr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
+    - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
   execute0pr.cerberusorg.cerberus.net:
     container_name: execute0pr.cerberusorg.cerberus.net
     extends:
@@ -240,7 +276,19 @@ services:
     networks:
     - cerberusntw
     extra_hosts:
+    - anchorpr.whitebox.cerberus.net:149.28.196.252
+    - lead0pr.whitebox.cerberus.net:149.28.196.252
+    - lead1pr.whitebox.cerberus.net:149.28.196.252
+    - communicatepr.whitebox.cerberus.net:149.28.196.252
     - anchorpr.sipher.cerberus.net:155.138.144.24
     - lead0pr.sipher.cerberus.net:155.138.144.24
     - lead1pr.sipher.cerberus.net:155.138.144.24
     - communicatepr.sipher.cerberus.net:155.138.144.24
+    - anchorpr.violet.cerberus.net:000.11.000.111
+    - lead0pr.violet.cerberus.net:000.11.000.111
+    - lead1pr.violet.cerberus.net:000.11.000.111
+    - communicatepr.violet.cerberus.net:000.11.000.111
+    - anchorpr.ghost.cerberus.net:000.11.000.111
+    - lead0pr.ghost.cerberus.net:000.11.000.111
+    - lead1pr.ghost.cerberus.net:000.11.000.111
+    - communicatepr.ghost.cerberus.net:000.11.000.111
