@@ -94,7 +94,6 @@ function printHelp() {
         echo "		Example:"
         echo "		./operatecntw.sh remove-env-r -o myOrganization -e ext"
 	echo
-	echo
 	echo "	update-env-r"
         echo "		Updates Cerberus organization, Ordering Service instances and organizations environment data for organization remotely"
         echo "		To update the data on a single organization:"
@@ -129,9 +128,41 @@ function printHelp() {
 	echo "		Example:"
 	echo "		./operatecntw.sh add-extra-hosts-r -o myOrganization -e cerb"
 	echo
+        echo "	remove-extra-hosts-r"
+        echo "		Removes Cerberus organization, Ordering Service instances and organizations extra hosts data from organization remotely"
+        echo "		To remove the data from a single organization:"
+        echo "		-o <destination-organization-name>"
+        echo "		To remove the data from all organizations:"
+        echo "		-o all"
+        echo "		To remove extra hosts data for Cerberus network and Ordering Service instances:"
+        echo "		-e cerb"
+        echo "		To remove extra hosts data remotely for all external organizations:"
+        echo "		-e ext"
+        echo "		To remove extra hosts data remotely for a specific external organization:"
+        echo "		-e <organization-name>"
+        echo "		To remove extra hosts data remotely for all entities:"
+        echo "		-e all"
+        echo "		Example:"
+        echo "          ./operatecntw.sh remove-extra-hosts-r -o myOrganization -e ext"
+        echo
+        echo "	update-extra-hosts-r"
+        echo "		Updates Cerberus organization, Ordering Service instances and organizations extra hosts data for organization remotely"
+        echo "		To update the data on a single organization:"
+        echo "		-o <destination-organization-name>"
+        echo "		To update the data on all organizations:"
+        echo "		-o all"
+        echo "		To update extra hosts data for Cerberus network and Ordering Service instances:"
+        echo "		-e cerb"
+        echo "		To update extra hosts data remotely for all external organizations:"
+        echo "		-e ext"
+        echo "		To update extra hosts data remotely for a specific external organization:"
+        echo "		-e <organization-name>"
+        echo "		To update extra hosts data remotely for all entities:"
+        echo "		-e all"
+        echo "		Example:"
+        echo "		./operatecntw.sh update-extra-hosts-r -o myOrganization -e ext"
 	echo
-
-
+	echo
 	echo "	help"
 	echo "		Displays this message"
 	echo
@@ -217,12 +248,16 @@ elif [ "$MODE" == "add-org-extra-hosts" ]; then
 elif [ "$MODE" == "remove-org-extra-hosts" ]; then
 	EXPMODE="Removing external organization extra hosts from Cerberus configuration files"
 
+###################################################################
+# Remote operations
+# Following starts scripts on remote host machines and perform actions on behalf of organizations hosts
+
 # ./operatecntw.sh add-env-r
 elif [ "$MODE" == "add-env-r" ]; then
 	EXPMODE="Adding environment data to organization remotely"
 
 # ./operatecntw.sh remove-env-r
-elif [ "${MODE}" == "remove-env-r" ]; then
+elif [ "$MODE" == "remove-env-r" ]; then
 	EXPMODE="Removing environment data from organization remotely"
 
 # ./operatecntw.sh update-env-r
@@ -233,10 +268,19 @@ elif [ "$MODE" == "update-env-r" ]; then
 elif [ "$MODE" == "add-extra-hosts-r" ]; then
 	EXPMODE="Adding extra hosts to destination hosts remotely"
 
+# ./operatecntw.sh remove-extra-hosts-r
+elif [ "$MODE" == "remove-extra-hosts-r" ]; then
+	EXPMODE="Removing extra hosts from destination hosts remotely"
+
+# ./operatecntw.sh update-extra-hosts-r
+elif [ "$MODE" == "update-extra-hosts-r" ]; then
+	EXPMODE="Updating extra hosts on destination hosts remotely"
+
 ##############################################################################
 
-
-
+# ./operatecntw.sh create-org-channelctx
+elif [ "$MODE" == "create-org-channelctx" ]; then
+	EXPMODE="Creating organization channel configuration updates"
 
 
 
@@ -467,7 +511,8 @@ elif [ "${MODE}" == "add-env-r" ]; then
 			destOrgConfigFile=external-orgs/${ORG}-data.json
 
 			for file in external-orgs/*data.json; do
-				if [ "$file" == "$destOrgConfigFile" ]; then
+				if grep -q "$destOrgConfigFile" "$file" ; then
+				#if [ "$file" == "$destOrgConfigFile" ]; then
 					continue;
 				fi
 
@@ -481,7 +526,8 @@ elif [ "${MODE}" == "add-env-r" ]; then
 			
 			# add external organizations data to destination hosts
 			for file in external-orgs/*data.json; do
-                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                if grep -q "$destOrgConfigFile" "$file" ; then
+				#if [ "$file" == "$destOrgConfigFile" ]; then
                                         continue;
                                 fi
 
@@ -537,7 +583,8 @@ elif [ "${MODE}" == "remove-env-r" ]; then
 			destOrgConfigFile=external-orgs/${ORG}-data.json
 
                         for file in external-orgs/*data.json; do
-                                if [ "$file" == "$destOrgConfigFile" ]; then
+				if grep -q "$destOrgConfigFile" "$file" ; then
+                                #if [ "$file" == "$destOrgConfigFile" ]; then
                                         continue;
                                 fi
 
@@ -551,7 +598,8 @@ elif [ "${MODE}" == "remove-env-r" ]; then
 
                         # remove external organizations data from destination hosts
                         for file in external-orgs/*data.json; do
-                                if [ "$file" == "$destOrgConfigFile" ]; then
+				if grep -q "$destOrgConfigFile" "$file" ; then
+                                #if [ "$file" == "$destOrgConfigFile" ]; then
                                         continue;
                                 fi
 
@@ -607,7 +655,8 @@ elif [ "${MODE}" == "update-env-r" ]; then
                         destOrgConfigFile=external-orgs/${ORG}-data.json
 
                         for file in external-orgs/*data.json; do
-                                if [ "$file" == "$destOrgConfigFile" ]; then
+				if grep -q "$destOrgConfigFile" "$file" ; then
+                                #if [ "$file" == "$destOrgConfigFile" ]; then
                                         continue;
                                 fi
 
@@ -644,7 +693,7 @@ elif [ "${MODE}" == "update-env-r" ]; then
 # add cerberus organization, ordering service instances and external organizations extra hosts to remote organization hosts
 elif [ "${MODE}" == "add-extra-hosts-r" ]; then
 
-	       # check if organization and entity option tags are provided
+	# check if organization and entity option tags are provided
         if [ -z "$ORG" ]; then
                 echo "Please provide organization name with '-o' option tag"
                 printHelp
@@ -681,7 +730,8 @@ elif [ "${MODE}" == "add-extra-hosts-r" ]; then
 			destOrgConfigFile=external-orgs/${ORG}-data.json
 
 			for file in external-orgs/*data.json; do
-                                if [ "$file" == "$destOrgConfigFile" ]; then
+                                if grep -q "$destOrgConfigFile" "$file" ; then
+				#if [ "$file" == "$destOrgConfigFile" ]; then
                                         continue;
                                 fi
 
@@ -698,7 +748,8 @@ elif [ "${MODE}" == "add-extra-hosts-r" ]; then
                         destOrgConfigFile=external-orgs/${ORG}-data.json
 
                         for file in external-orgs/*data.json; do
-                                if [ "$file" == "$destOrgConfigFile" ]; then
+				if grep -q "$destOrgConfigFile" "$file" ; then
+                                #if [ "$file" == "$destOrgConfigFile" ]; then
                                         continue;
                                 fi
 
@@ -715,13 +766,89 @@ elif [ "${MODE}" == "add-extra-hosts-r" ]; then
 	fi
 
 # remove cerberus organization and ordering service extra hosts from remote organization hosts
+elif [ "${MODE}" == "remove-extra-hosts-r" ]; then
 
+        # check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
 
-# tested until here #
+        if [ -z "$ENTITY" ]; then
+                echo "Please provide entity setting with '-e' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ "${ENTITY}" == "${ORG}" ]; then
+                echo "ERROR: Destination and delivering organization names cannot be the same"
+                printHelp
+                exit 1
+        fi
+
+	# to be developed
+
+elif [ "${MODE}" == "update-extra-hosts-r" ]; then
+
+        # check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ -z "$ENTITY" ]; then
+                echo "Please provide entity setting with '-e' option tag"
+                printHelp
+                exit 1
+        fi
+
+        if [ "${ENTITY}" == "${ORG}" ]; then
+                echo "ERROR: Destination and delivering organization names cannot be the same"
+                printHelp
+                exit 1
+        fi
+
+	# to be developed
+
 ##################################################################
 
+elif [ "${MODE}" == "create-org-channelctx" ]; then
+	
+	# check if organization and entity option tags are provided
+        if [ -z "$ORG" ]; then
+                echo "Please provide organization name with '-o' option tag"
+                printHelp
+                exit 1
+        fi
+
+	        # check if channel option tag is provided
+        if [ -z "$CHANNELS_LIST" ]; then
+                echo "Please provide a list of channels names with '-l' option tag"
+                echo "If you want to connect to more than one channel, please provide channel names separated with a comma and without spaces"
+                echo "Examples:"
+                echo "./cerberusntw.sh connectorg -n <org-name> -l pers"
+                echo "./cerberusntw.sh connectorg -n <org-name> -l pers,inst"
+                echo "./cerberusntw.sh connectorg -n <org-name> -l pers,inst,int"
+                exit 1
+        fi
+
+        # check if organization option tag is provided
+        if [ -z "$NEW_ORG" ]; then
+                echo "Please provide a organization name with '-n' option tag"
+                printHelp
+                exit 1
+        fi
+
+	# create channel updates by fetcinh and updating the current data
+	createChannelCtx
+	
+	# deliver artifacts and ordering service data
 
 
+
+# tested until here
 
 elif [ "${MODE}" == "getorgartifacts" ]; then
 

@@ -47,6 +47,54 @@ function removeNetworkHostsRemotely() {
 	fi      
 }
 
+function createChannelCtx() {
+
+	org=$ORG
+	orgConfigFile=external-orgs/$org-data.json
+
+	# check if extra hosts are set - contains checks if file is present or environment data is added
+	bash scripts/addOrgExtraHosts.sh $org
+
+	# parse channels list
+	channels=$(echo $CHANNELS_LIST | tr "," "\n")
+
+        for channel in $channels; do
+                if [ "$channel" == "pers" ]; then
+                        echo "Connecting ${ORG^} to Cerberus Network channel: Person Accounts"
+                        docker exec cli.cerberusorg.cerberus.net scripts/addOrgToPersonAccChannel.sh $ORG $PERSON_ACCOUNTS_CHANNEL
+
+                        if [ $? -ne 0 ]; then
+                                echo "Unable to create config tx for ${PERSON_ACCOUNTS_CHANNEL}"
+                                exit 1
+                        fi
+
+                 elif [ "$channel" == "inst" ]; then
+                        echo "Connecting ${ORG^} to Cerberus Network channel: Institution Accounts"
+                        docker exec cli.cerberusorg.cerberus.net scripts/addOrgToInstitutionAccChannel.sh $ORG $INSTITUTION_ACCOUNTS_CHANNEL
+
+                        if [ $? -ne 0 ]; then
+                                echo "Unable to create config tx for ${INSTITUTION_ACCOUNTS_CHANNEL}"
+                                exit 1
+                        fi
+
+                elif [ "$channel" == "int" ]; then
+                        echo "Connecting ${ORG^} to Cerberus Network channel: Integration Accounts"
+                        docker exec cli.cerberusorg.cerberus.net scripts/addOrgToIntegrationAccChannel.sh $ORG $INTEGRATION_ACCOUNTS_CHANNEL
+
+                        if [ $? -ne 0 ]; then
+                                echo "Unable to create config tx for ${INTEGRATION_ACCOUNTS_CHANNEL}"
+                                exit 1
+                        fi
+                else
+                        echo "Channel name: $channel unknown"
+                        exit 1
+                fi
+        done
+
+	
+
+}
+
 function deliverOrgArtifacts() {
          
 	which sshpass
@@ -74,43 +122,6 @@ function parseChannelNames() {
 
 }
 
-function connectToChannels() {
-
-	channels=$(echo $CHANNELS_LIST | tr "," "\n")
-
-	for channel in $channels; do
-		if [ "$channel" == "pers" ]; then
-			echo "Connecting ${ORG^} to Cerberus Network channel: Person Accounts"
-			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToPersonAccChannel.sh $ORG $PERSON_ACCOUNTS_CHANNEL
-
-			if [ $? -ne 0 ]; then
-				echo "Unable to create config tx for ${PERSON_ACCOUNTS_CHANNEL}"
-				exit 1
-			fi
-
-		 elif [ "$channel" == "inst" ]; then
-			echo "Connecting ${ORG^} to Cerberus Network channel: Institution Accounts"
-			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToInstitutionAccChannel.sh $ORG $INSTITUTION_ACCOUNTS_CHANNEL
-
-			if [ $? -ne 0 ]; then
-				echo "Unable to create config tx for ${INSTITUTION_ACCOUNTS_CHANNEL}"
-				exit 1
-			fi
-
-		elif [ "$channel" == "int" ]; then
-			echo "Connecting ${ORG^} to Cerberus Network channel: Integration Accounts"
-			docker exec cli.cerberusorg.cerberus.net scripts/addOrgToIntegrationAccChannel.sh $ORG $INTEGRATION_ACCOUNTS_CHANNEL
-
-			if [ $? -ne 0 ]; then
-				echo "Unable to create config tx for ${INTEGRATION_ACCOUNTS_CHANNEL}"
-				exit 1
-			fi
-		else
-			echo "Channel name: $channel unknown"
-			exit 1
-		fi
-	done
-}
 
 function disconnectOrg() {
 

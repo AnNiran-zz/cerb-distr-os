@@ -1,5 +1,6 @@
 {
 	"label": "sipher",
+	"msp": "SipherMSP",
 	"containers":  [
 		{
 			"name": "anchorpr",

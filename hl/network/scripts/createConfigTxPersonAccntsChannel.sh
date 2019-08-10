@@ -3,7 +3,15 @@
 
 orgName=$1
 PERSON_ACCOUNTS_CHANNEL=$2
-orgMsp="${orgName^}MSP"
+
+orgMspVar="${org^^}_ORG_MSP"
+
+if [ -z "${!orgMspVar}" ]; then
+	echo "Environment variables for MSP for ${org} is not present"
+	echo "Add environment variables before proceeding"
+	printHelp
+	exit 1
+fi
 
 setOrdererGlobals 0
 
@@ -26,7 +34,7 @@ configtxlator proto_decode --input channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}_
 set +x
 
 set -x
-jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"'$orgMsp'":.[1]}}}}}' channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json ./channel-artifacts/${orgName}-channel-artifacts.json > ./channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json
+jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"'${!orgMspVar}'":.[1]}}}}}' channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json ./channel-artifacts/${orgName}-channel-artifacts.json > ./channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json
 set +x
 
 createConfigUpdate $PERSON_ACCOUNTS_CHANNEL channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json channel-artifacts/${orgName}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb

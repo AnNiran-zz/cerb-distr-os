@@ -40,6 +40,7 @@ if [ ! -f "$ORG_CONFIG_FILE" ]; then
 fi
 
 source .env
+source ~/.profile
 
 orgLabelValue=$(jq -r '.label' $ORG_CONFIG_FILE)
 result=$?
@@ -52,8 +53,22 @@ fi
 orgLabelValueStripped=$(echo $orgLabelValue | sed 's/"//g')
 orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 
-# add organization labe
+# add organization label
 addEnvVariable $orgLabelValueStripped "${orgLabelValueStripped^^}_ORG_LABEL" "${!orgLabelVar}"
+
+orgMspLabelValue=$(jq -r 'msp' $ORG_CONFIG_FILE)
+result=$?
+
+if [ $result -ne 0 ]; then
+        echo "ERROR: File format for $ORG_CONFIG_FILE does no match expected"
+        exit 1
+fi
+
+orgMspLabelValueStripped=$(echo $orgMspLabelValue | sed 's/"//g')
+orgMspLabelVar="${orgLabelValueStripped^^}_ORG_MSP"
+
+# add organization msp
+addEnvVariable $orgMspLabelValueStripped "${orgLabelValueStripped^^}_ORG_MSP" "${!orgMspLabelVar}"
 
 orgContainers=$(jq -r '.containers[]' $ORG_CONFIG_FILE)
 result=$?

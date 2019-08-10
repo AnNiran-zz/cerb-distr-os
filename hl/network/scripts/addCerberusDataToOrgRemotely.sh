@@ -6,8 +6,6 @@ if [ "${dataType}" != "env" ] && [ "${dataType}" != "extrahosts" ]; then
 	echo "Unknown data type request"
 	echo $dataType
 	exit 1
-else
-	continue;
 fi
 
 ARCH=$(uname -s | grep Darwin)
