@@ -1,0 +1,53 @@
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"organizations":[
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":""}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":""}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":"[ { "channel": "personaccountsch" }, { "channel": "institutionaccountsch" }, { "channel": "integrationaccountsch" } ]"}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":"[ { "channel": "personaccountsch" }, { "channel": "institutionaccountsch" }, { "channel": "integrationaccountsch" } ]"}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}
+{"org":{"label":"cerberusorg","name":"CerberusOrg","msp":"CerberusOrgMSP","channels":"[ { "channel": "personaccountsch" }, { "channel": "institutionaccountsch" }, { "channel": "integrationaccountsch" } ]"}},
+{"org":{"label":"whitebox","name":"WhiteBox","msp":"WhiteBoxMSP","channels":"[ { "channel": "personaccountsch" }, { "channel": "institutionaccountsch" }, { "channel": "integrationaccountsch" } ]"}},
+{"org":{"label":"sipher","name":"Sipher","msp":"","channels":""}}
+]}

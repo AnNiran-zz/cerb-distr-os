@@ -162,6 +162,10 @@ function printHelp() {
         echo "		Example:"
         echo "		./operatecntw.sh update-extra-hosts-r -o myOrganization -e ext"
 	echo
+	echo "	create-org-channelctx"
+	echo "		"
+	echo "		"
+	echo
 	echo
 	echo "	help"
 	echo "		Displays this message"
@@ -282,6 +286,9 @@ elif [ "$MODE" == "update-extra-hosts-r" ]; then
 elif [ "$MODE" == "create-org-channelctx" ]; then
 	EXPMODE="Creating organization channel configuration updates"
 
+# ./operatecntw.sh deliver-certs
+elif [ "${MODE}" == "deliver-certs" ]; then
+	EXPMODE="Deliver Cerberus organization and Ordering Service instances certificates to organization hosts"
 
 
 
@@ -813,7 +820,7 @@ elif [ "${MODE}" == "update-extra-hosts-r" ]; then
 	# to be developed
 
 ##################################################################
-
+# ./operatecntw.sh create-org-channelctx
 elif [ "${MODE}" == "create-org-channelctx" ]; then
 	
 	# check if organization and entity option tags are provided
@@ -834,19 +841,36 @@ elif [ "${MODE}" == "create-org-channelctx" ]; then
                 exit 1
         fi
 
-        # check if organization option tag is provided
-        if [ -z "$NEW_ORG" ]; then
-                echo "Please provide a organization name with '-n' option tag"
+	# create channel updates by fetcinh and updating the current data
+	createChannelCtx
+	
+# ./operatecntw.sh deliver-certs
+elif [ "${MODE}" == "deliver-certs" ]; then
+
+	        # check if organization and entity option tags are provided
+        if [ -z "$ENTITY" ]; then
+                echo "Please provide entity name with '-e' option tag"
                 printHelp
                 exit 1
         fi
 
-	# create channel updates by fetcinh and updating the current data
-	createChannelCtx
-	
-	# deliver artifacts and ordering service data
+	if [ "${ENTITY}" == "ext" ]; then
+		# deliver certificates to all organizations
+		for file in external-orgs/*-data.json; do
+			bash scripts/deliverCerberusCertificatesToOrg.sh $file
+		done
 
+	else
+		# deliver certificates to specific organization
+		orgConfigFile=external-orgs/${ENTITY}-data.json
 
+		bash scripts/deliverCerberusCertificatesToOrg.sh $orgConfigFile
+	fi
+
+# ./operatecntw.sh deliver-channel-artifacts
+elif [ "${MODE}" == "deliver-channel-artifacts" ]; then
+
+	echo "To be developed"
 
 # tested until here
 

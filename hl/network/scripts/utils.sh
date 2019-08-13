@@ -223,6 +223,7 @@ function createConfigUpdate() {
 	ORIGINAL=$2
 	MODIFIED=$3
 	OUTPUT=$4
+	orgName=$5
 
 	echo "Original is "
 	echo $ORIGINAL

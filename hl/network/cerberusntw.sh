@@ -142,8 +142,8 @@ function networkUp() {
 	fi
 
 	sleep 1
-	echo "Sleeping 10s to allow kafka cluster to complete booting"
-	sleep 9
+	echo "Sleeping 20s to allow kafka cluster to complete booting"
+	sleep 20
 
 	# now run the end to end script
 	docker exec cli.cerberusorg.cerberus.net scripts/script.sh $PERSON_ACCOUNTS_CHANNEL $INSTITUTION_ACCOUNTS_CHANNEL $INTEGRATION_ACCOUNTS_CHANNEL $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE

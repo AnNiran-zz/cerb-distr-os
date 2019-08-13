@@ -47,56 +47,84 @@ function removeNetworkHostsRemotely() {
 	fi      
 }
 
+# ./operatecntw.sh create-org-channelctx -o sipher -l pers
 function createChannelCtx() {
 
 	org=$ORG
 	orgConfigFile=external-orgs/$org-data.json
 
-	# check if extra hosts are set - contains checks if file is present or environment data is added
-	bash scripts/addOrgExtraHosts.sh $org
+	source .env
+
+	orgMspVar="${org^^}_ORG_MSP"
+	if [ -z "${!orgMspVar}" ]; then
+        	echo "Environment variables for MSP for ${org} is not present"
+        	echo "Obtaining ..."
+	
+        	bash scripts/addOrgEnvData.sh $ORG_CONFIG_FILE
+	fi
 
 	# parse channels list
-	channels=$(echo $CHANNELS_LIST | tr "," "\n")
-
+	channels=$(echo $CHANNELS_LIST | tr "," "\n" | sort -u | tr "\n" " ")
+	
         for channel in $channels; do
                 if [ "$channel" == "pers" ]; then
-                        echo "Connecting ${ORG^} to Cerberus Network channel: Person Accounts"
-                        docker exec cli.cerberusorg.cerberus.net scripts/addOrgToPersonAccChannel.sh $ORG $PERSON_ACCOUNTS_CHANNEL
+                        
+			echo "Connecting ${ORG^^} to Cerberus Network channel: Person Accounts"
+			#docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxPersonAccntsChannel.sh $org ${!orgMspVar} $PERSON_ACCOUNTS_CHANNEL
 
                         if [ $? -ne 0 ]; then
                                 echo "Unable to create config tx for ${PERSON_ACCOUNTS_CHANNEL}"
                                 exit 1
                         fi
 
+			# deliver new files to organization hosts
+			bash scripts/deliverChannelArtifactsToOrg.sh $org "persaccntschannel"
+
                  elif [ "$channel" == "inst" ]; then
-                        echo "Connecting ${ORG^} to Cerberus Network channel: Institution Accounts"
-                        docker exec cli.cerberusorg.cerberus.net scripts/addOrgToInstitutionAccChannel.sh $ORG $INSTITUTION_ACCOUNTS_CHANNEL
+                        
+			echo "Connecting ${ORG^^} to Cerberus Network channel: Institution Accounts"
+			#docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxInstAccntsChannel.sh $org ${!orgMspVar} $INSTITUTION_ACCOUNTS_CHANNEL
 
                         if [ $? -ne 0 ]; then
                                 echo "Unable to create config tx for ${INSTITUTION_ACCOUNTS_CHANNEL}"
                                 exit 1
                         fi
 
+			# deliver new files to organization hosts
+			bash scripts/deliverChannelArtifactsToOrg.sh $org "instaccntschannel"
+	
                 elif [ "$channel" == "int" ]; then
-                        echo "Connecting ${ORG^} to Cerberus Network channel: Integration Accounts"
-                        docker exec cli.cerberusorg.cerberus.net scripts/addOrgToIntegrationAccChannel.sh $ORG $INTEGRATION_ACCOUNTS_CHANNEL
+
+                        echo "Connecting ${ORG^^} to Cerberus Network channel: Integration Accounts"
+                        #docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxIntegrAccntsChannel.sh $org ${!orgMspVar} $INTEGRATION_ACCOUNTS_CHANNEL
 
                         if [ $? -ne 0 ]; then
                                 echo "Unable to create config tx for ${INTEGRATION_ACCOUNTS_CHANNEL}"
                                 exit 1
                         fi
+
+			# deliver new files to organization hosts
+			bash scripts/deliverChannelArtifactsToOrg.sh $org "integraccntschannel"
                 else
                         echo "Channel name: $channel unknown"
                         exit 1
                 fi
         done
 
-	
+	# deliver new artifacts to organization
+
+	# add new organization to json data list 
+	#bash scripts/addOrgToRecords.sh $org $channels # not sure if we need this
 
 }
 
-function deliverOrgArtifacts() {
-         
+# delivering:
+# ordering service folder
+# channel artifacts
+# /operatecntw.sh deliver-
+function deliverOsDataToOrg() {
+
+
 	which sshpass
 	if [ "$?" -ne 0 ]; then
 		echo "sshpass tool not found"
@@ -106,22 +134,6 @@ function deliverOrgArtifacts() {
 	orgUsername="${ORG^^}_ORG_USERNAME"
 	artifactsLocation=/home/${!orgUsername}/server/go/src/cerberus
 }       
-
-function parseChannelNames() {
-
-	namesList=$1
-
-	channels=$(echo $namesList | tr "," "\n")
-
-	for channel in $channels; do
-		if [ "$channel" != "person" ] && [ "$channel" != "institution" ] && [ "$channel" != "integration" ]; then
-			echo "Channel name: $channel unknown"
-			exit 1
-		fi
-	done
-
-}
-
 
 function disconnectOrg() {
 

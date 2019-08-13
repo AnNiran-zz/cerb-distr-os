@@ -56,7 +56,7 @@ orgLabelVar="${orgLabelValueStripped^^}_ORG_LABEL"
 # add organization label
 addEnvVariable $orgLabelValueStripped "${orgLabelValueStripped^^}_ORG_LABEL" "${!orgLabelVar}"
 
-orgMspLabelValue=$(jq -r 'msp' $ORG_CONFIG_FILE)
+orgMspLabelValue=$(jq -r '.msp' $ORG_CONFIG_FILE)
 result=$?
 
 if [ $result -ne 0 ]; then

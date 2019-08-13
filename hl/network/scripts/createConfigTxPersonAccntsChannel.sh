@@ -1,17 +1,9 @@
 #!/bin/bash
 . scripts/utils.sh
 
-orgName=$1
-PERSON_ACCOUNTS_CHANNEL=$2
-
-orgMspVar="${org^^}_ORG_MSP"
-
-if [ -z "${!orgMspVar}" ]; then
-	echo "Environment variables for MSP for ${org} is not present"
-	echo "Add environment variables before proceeding"
-	printHelp
-	exit 1
-fi
+org=$1
+orgMsp=$2
+PERSON_ACCOUNTS_CHANNEL=$3
 
 setOrdererGlobals 0
 
@@ -34,30 +26,27 @@ configtxlator proto_decode --input channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}_
 set +x
 
 set -x
-jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"'${!orgMspVar}'":.[1]}}}}}' channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json ./channel-artifacts/${orgName}-channel-artifacts.json > ./channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json
+jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"'$orgMsp'":.[1]}}}}}' channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json ./channel-artifacts/${org}-channel-artifacts.json > ./channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json
 set +x
 
-createConfigUpdate $PERSON_ACCOUNTS_CHANNEL channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json channel-artifacts/${orgName}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb
+createConfigUpdate $PERSON_ACCOUNTS_CHANNEL channel-artifacts/${PERSON_ACCOUNTS_CHANNEL}-config.json channel-artifacts/modified_${PERSON_ACCOUNTS_CHANNEL}-config.json channel-artifacts/${org}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb $org
 
 echo
-echo "========= Config transaction to add ${orgName^} to ${PERSON_ACCOUNTS_CHANNEL} created =========="
+echo "========= Config transaction to add ${org^^} to ${PERSON_ACCOUNTS_CHANNEL} created =========="
 echo
 
-echo "========= Signing config transactions for ${orgName^} ========="
+echo "========= Signing config transactions for ${org^^} ========="
 echo
 
-signConfigtxByPeer channel-artifacts/${orgName}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb
+signConfigtxByPeer channel-artifacts/${org}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb
 
 setGlobals 1
 set -x
-peer channel update -f channel-artifacts/${orgName}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb -c $PERSON_ACCOUNTS_CHANNEL -o osinstance0.cerberus.net:7050 --tls --cafile $OSINSTANCE0_CA
+peer channel update -f channel-artifacts/${org}-${PERSON_ACCOUNTS_CHANNEL}_update_in_envelope.pb -c $PERSON_ACCOUNTS_CHANNEL -o osinstance0.cerberus.net:7050 --tls --cafile $OSINSTANCE0_CA
 set +x
 
-# add new organization to json data list 
-addOrgToRecords
-
 echo
-echo "========= Config transaction for adding ${orgName^} to ${PERSON_ACCOUNTS_CHANNEL} submitted! ========="
+echo "========= Config transaction for adding ${org^^} to ${PERSON_ACCOUNTS_CHANNEL} submitted! ========="
 echo
 
 exit 0
