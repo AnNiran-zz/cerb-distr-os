@@ -41,32 +41,11 @@ if [ -z "${!orgLabelVar}" ]; then
 fi
 
 # channel artifacts configuration files
-configJson=channel-artifacts/${channel}-config.json
-configPb=channel-artifacts/${channel}-config.pb
 channelTx=channel-artifacts/${channel}.tx
-channelConfigBlock=channel-artifacts/${channel}_config_block.pb
-
-modifiedConfigJson=channel-artifacts/modified_${channel}-config.json
-modifiedConfigPb=channel-artifacts/modified_${channel}-config.pb
-
-orgChannelUpdateJson=channel-artifacts/${org}-${channel}_update.json
-orgChannelUpdatePb=channel-artifacts/${org}-${channel}_update.pb
-orgChannelUpdateInEnvelopeJson=channel-artifacts/${org}-${channel}_update_in_envelope.json
-orgChannelUpdateInEnvelopePb=channel-artifacts/${org}-${channel}_update_in_envelope.pb
+genesisBlock=channel-artifacts/genesis.block
+orgChannelArtifacts=channel-artifacts/${org}-channel-artifacts.json
 
 errorMessageMissingFile="Re-run channel update and context creation in the peer"
-
-if [ ! -f "$configJson" ]; then
-	echo "ERROR: $configJson file is missing."
-	echo $errorMessageMissingFile
-	exit 1
-fi
-
-if [ ! -f "$configPb" ]; then
-	echo "ERROR: $configPb file is missing."
-	echo $errorMessageMissingFile
-	exit 1
-fi
 
 if [ ! -f "$channelTx" ]; then
 	echo "ERROR: $channelTx file is missing."
@@ -74,44 +53,14 @@ if [ ! -f "$channelTx" ]; then
 	exit 1
 fi
 
-if [ ! -f "$channelConfigBlock" ]; then
-	echo "ERROR: $channelConfigBlock file is missing."
+if [ ! -f "$genesisBlock" ]; then
+	echo "ERROR: $genesisBlock file is missing."
 	echo $errorMessageMissingFile
 	exit 1
 fi
 
-if [ ! -f "$modifiedConfigJson" ]; then
-	echo "ERROR: $modifiedConfigJson file is missing."
-	echo $errorMessageMissingFile
- 	exit 1
-fi
-
-if [ ! -f "$modifiedConfigPb" ]; then
-	echo "ERROR: $modifiedConfigPb file is missing."
-	echo $errorMessageMissingFile
-	exit 1
-fi	
-
-if [ ! -f "$orgChannelUpdatePb" ]; then
-	echo "ERROR: $orgChannelUpdatePb file is missing."
-	echo $errorMessageMissingFile
-	exit 1
-fi
-
-if [ ! -f "$orgChannelUpdateJson" ]; then
-	echo "ERROR: $orgChannelUpdateJson file is missing."
-	echo $errorMessageMissingFile
-	exit 1
-fi
-
-if [ ! -f "$orgChannelUpdateInEnvelopeJson" ]; then
-	echo "ERROR: $orgChannelUpdateInEnvelopeJson is missing."
-	echo $errorMessageMissingFile
-	exit 1
-fi	
-
-if [ ! -f "$orgChannelUpdateInEnvelopePb" ]; then
-	echo "ERROR: $orgChannelUpdateInEnvelopePb is missing."
+if [ ! -f "$orgChannelArtifacts" ]; then
+	echo "ERROR: $orgChannelArtifacts file is missing."
 	echo $errorMessageMissingFile
 	exit 1
 fi
@@ -142,107 +91,41 @@ for orgContainer in $(echo "${orgContainers}" | jq -r '. | @base64'); do
                 containerPasswordVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PASSWORD"
         	containerPathVar="${orgLabelValueStripped^^}_ORG_${containerNameValueStripped^^}_PATH"
 
-		sshpass -p "${!containerPasswordVar}" scp channel-artifacts/${org}-channel-artifacts.json ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult0=$?
-                echo $copyResult0
+		# check if genesis.block file is present
+		sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "test -e ${!containerPathVar}hl/network/${genesisBlock}"
+		#sshpass -p "${!containerPasswordVar}" ssh ${!containerUsernameVar}@${!containerHostVar} "cd ${!containerPathVar}hl/network/channel-artifacts && ls -la"
 
-                if [ $copyResult0 -ne 0 ]; then
-                        echo "ERROR: Cannot copy channel-artifacts/$org-channel-artifacts.json file to $containerHostVar"
-                        exit 1
-                fi
+		result0=$?
+		echo $result0
 
-		# deliver all files to host
-		sshpass -p "${!containerPasswordVar}" scp $configJson ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-		copyResult1=$?
-		echo $copyResult1
+		if [ $result0 -ne 0 ]; then
+			sshpass -p "${!containerPasswordVar}" scp $genesisBlock ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
+                	copyResult1=$?
+                	echo $copyResult1
 
-		if [ $copyResult1 -ne 0 ]; then
-			echo "ERROR: Cannot copy $configJson file to $containerHostVar"
-			exit 1
+                	if [ $copyResult1 -ne 0 ]; then
+                        	echo "ERROR: Cannot copy $genesisBlock file to $containerHostVar"
+                        	exit 1
+                	fi
 		fi
 
-		sshpass -p "${!containerPasswordVar}" scp $configPb ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
+		sshpass -p "${!containerPasswordVar}" scp $channelTx ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
                 copyResult2=$?
                 echo $copyResult2
 
-                if [ $copyResult2 -ne 0 ]; then 
-                        echo "ERROR: Cannot copy $configPb file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $channelTx ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult3=$?
-                echo $copyResult3
-
-                if [ $copyResult3 -ne 0 ]; then
+                if [ $copyResult2 -ne 0 ]; then
                         echo "ERROR: Cannot copy $channelTx file to $containerHostVar"
                         exit 1
                 fi
 
-		sshpass -p "${!containerPasswordVar}" scp $channelConfigBlock ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult4=$?
-                echo $copyResult4
+		sshpass -p "${!containerPasswordVar}" scp $orgChannelArtifacts ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
+		copyResult3=$?
+		echo $copyResult3
 
-                if [ $copyResult4 -ne 0 ]; then 
-                        echo "ERROR: Cannot copy $channelConfigBlock file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $modifiedConfigJson ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult5=$?
-                echo $copyResult5
-
-                if [ $copyResult5 -ne 0 ]; then 
-                        echo "ERROR: Cannot copy $modifiedConfigJson file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $modifiedConfigPb ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult6=$?
-                echo $copyResult6
-
-                if [ $copyResult6 -ne 0 ]; then
-                        echo "ERROR: Cannot copy $modifiedConfigPb file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $orgChannelUpdatePb ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult7=$?
-                echo $copyResult7
-
-                if [ $copyResult7 -ne 0 ]; then
-                        echo "ERROR: Cannot copy $orgChannelUpdatePb file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $orgChannelUpdateJson ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult8=$?
-                echo $copyResult8
-
-                if [ $copyResult8 -ne 0 ]; then
-                        echo "ERROR: Cannot copy $orgChannelUpdateJson file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $orgChannelUpdateInEnvelopeJson ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult8=$?
-                echo $copyResult8
-
-                if [ $copyResult8 -ne 0 ]; then
-                        echo "ERROR: Cannot copy $orgChannelUpdateInEnvelopeJson file to $containerHostVar"
-                        exit 1
-                fi
-
-		sshpass -p "${!containerPasswordVar}" scp $orgChannelUpdateInEnvelopePb ${!containerUsernameVar}@${!containerHostVar}:${!containerPathVar}hl/network/channel-artifacts
-                copyResult9=$?
-                echo $copyResult9
-
-                if [ $copyResult9 -ne 0 ]; then
-                        echo "ERROR: Cannot copy $orgChannelUpdateInEnvelopePb file to $containerHostVar"
-                        exit 1
-                fi
-
-
+		if [ $copyResult3 -ne 0 ]; then
+			echo "ERROR: Cannot copy $orgChannelArtifacts file to $containerHostVar"
+			exit 1
+		fi
 	}
         echo $(_jq '.name')
 done

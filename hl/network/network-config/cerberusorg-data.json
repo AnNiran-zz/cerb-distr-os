@@ -1,5 +1,7 @@
 {
 	"label": "cerberusorg",
+	"msp": "CerberusOrgMSP",
+	"name": "CerberusOrg",
 	"containers": [
 		{
 			"name": "anchorpr",

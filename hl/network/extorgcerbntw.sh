@@ -70,7 +70,7 @@ function createChannelCtx() {
                 if [ "$channel" == "pers" ]; then
                         
 			echo "Connecting ${ORG^^} to Cerberus Network channel: Person Accounts"
-			#docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxPersonAccntsChannel.sh $org ${!orgMspVar} $PERSON_ACCOUNTS_CHANNEL
+			docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxPersonAccntsChannel.sh $org ${!orgMspVar} $PERSON_ACCOUNTS_CHANNEL
 
                         if [ $? -ne 0 ]; then
                                 echo "Unable to create config tx for ${PERSON_ACCOUNTS_CHANNEL}"
@@ -83,7 +83,7 @@ function createChannelCtx() {
                  elif [ "$channel" == "inst" ]; then
                         
 			echo "Connecting ${ORG^^} to Cerberus Network channel: Institution Accounts"
-			#docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxInstAccntsChannel.sh $org ${!orgMspVar} $INSTITUTION_ACCOUNTS_CHANNEL
+			docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxInstAccntsChannel.sh $org ${!orgMspVar} $INSTITUTION_ACCOUNTS_CHANNEL
 
                         if [ $? -ne 0 ]; then
                                 echo "Unable to create config tx for ${INSTITUTION_ACCOUNTS_CHANNEL}"
@@ -96,7 +96,7 @@ function createChannelCtx() {
                 elif [ "$channel" == "int" ]; then
 
                         echo "Connecting ${ORG^^} to Cerberus Network channel: Integration Accounts"
-                        #docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxIntegrAccntsChannel.sh $org ${!orgMspVar} $INTEGRATION_ACCOUNTS_CHANNEL
+                        docker exec cli.cerberusorg.cerberus.net scripts/createConfigTxIntegrAccntsChannel.sh $org ${!orgMspVar} $INTEGRATION_ACCOUNTS_CHANNEL
 
                         if [ $? -ne 0 ]; then
                                 echo "Unable to create config tx for ${INTEGRATION_ACCOUNTS_CHANNEL}"
