@@ -1,0 +1,29 @@
+version: '2'
+  
+services:
+  leadpr.cerberusorg.cerberus.net:
+    container_name: leadpr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=leadpr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:10005
+    - CORE_PEER_CHAINCODEADDRESS=leadpr.cerberusorg.cerberus.net:10006
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10006
+    - CORE_PEER_GOSSIP_USELEADERELECTION=true
+    - CORE_PEER_GOSSIP_BOOTSTRAP=anchorprpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - leadpr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10005:7051
+    - 10006:7052
+    - 10007:7053
+    networks:
+    - cerberusntw

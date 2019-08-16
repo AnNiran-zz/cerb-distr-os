@@ -1,0 +1,39 @@
+version: '2'
+  
+volumes:
+  execute0pr.cerberusorg.cerberus.net:
+
+networks:
+  cerberusntw:
+
+services:
+  couchdb.execute0pr.cerberusorg:
+    container_name: couchdb.execute0pr.cerberusorg
+    image: hyperledger/fabric-couchdb:$IMAGE_TAG
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=userexecute0prcerberusorg
+      - COUCHDB_PASSWORD=passwordexecute0prcerberusorg
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - 10016:5984
+    networks:
+      - cerberusntw
+
+  execute0pr.cerberusorg.cerberus.net:
+    extends:
+      file: execute0pr.yaml
+      service: execute0pr.cerberusorg.cerberus.net
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.execute0pr.cerberusorg:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=userexecute0prcerberusorg
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=passwordexecute0prcerberusorg
+    depends_on:
+      - couchdb.execute0pr.cerberusorg
+

@@ -1,0 +1,27 @@
+version: '2'
+  
+volumes:
+  kafka5.cerberus.net:
+
+networks:
+  cerberusntw:
+
+services:
+  kafka5.cerberus.net:
+    extends:
+      file: ../base/kafka.yaml
+      service: kafka
+    container_name: kafka5.cerberus.net
+    environment:
+      - KAFKA_BROKER_ID=5
+      # add zookepers connection
+      #- KAFKA_ZOOKEEPER_CONNECT=zk0:2181, zk1:2181
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka5.cerberus.net:9093
+    depends_on:
+    # add dependencies
+    ports:
+      - 9097:9092
+    networks:
+      - cerberusntw
+

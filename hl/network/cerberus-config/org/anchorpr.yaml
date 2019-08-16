@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  anchorpr.cerberusorg.cerberus.net:
+    container_name: anchorpr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=anchorpr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+    - CORE_PEER_CHAINCODEADDRESS=anchorpr.cerberusorg.cerberus.net:7052
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/anchorpr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - anchorpr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10001:7051
+    - 10002:7052
+    - 10003:7053
+    networks:
+    - cerberusntw
+

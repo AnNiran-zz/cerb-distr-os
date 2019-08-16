@@ -1,0 +1,30 @@
+version: '2'
+  
+services:
+  communicatepr.cerberusorg.cerberus.net:
+    container_name: communicatepr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=communicatepr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:10009
+    - CORE_PEER_CHAINCODEADDRESS=communicatepr.cerberusorg.cerberus.net:10010
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10010
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=leadpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/communicatepr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/communicatepr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - communicatepr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10009:7051
+    - 10010:7052
+    - 10011:7053
+    networks:
+    - cerberusntw
+

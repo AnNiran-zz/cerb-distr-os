@@ -1,0 +1,33 @@
+version: '2'
+  
+volumes:
+  osinstance3.cerberus.net:
+
+networks:
+  cerberusntw:
+
+services:
+  osinstance3.cerberus.net:
+    extends:
+      file: ../base/os-base.yaml
+      service: os-base
+    container_name: osinstance3.cerberus.net
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+    - ORDERER_HOST=osinstance3.cerberus.net
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+    - ../../../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ../../../crypto-config/ordererOrganizations/cerberus.net/orderers/osinstance3.cerberus.net/msp/:/var/hyperledger/orderer/msp
+    - ../../../crypto-config/ordererOrganizations/cerberus.net/orderers/osinstance3.cerberus.net/tls/:/var/hyperledger/orderer/tls
+    - osinstance3.cerberus.net:/var/hyperledger/production/orderer
+    depends_on:
+    # add kafka instances
+    networks:
+    - cerberusntw
+    ports:
+    - 7350:7050
+    extra_hosts:
+    # add extra hosts 
+

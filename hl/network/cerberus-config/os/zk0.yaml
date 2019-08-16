@@ -1,0 +1,20 @@
+version: '2'
+
+volumes:
+  zk0.cerberus.net:
+
+networks:
+  cerberusntw:
+
+services:
+  zk0.cerberus.net:
+    extends:
+      file: ../base/kafka.yaml
+      service: zookeeper
+    container_name: zk0.cerberus.net
+    environment:
+      - ZOO_MY_ID=1
+        # add zoo serrvers
+        #- ZOO_SERVERS=server.1=zk0:2888:3888 server.2=zk1:2888:3888 server.3=zk2:2888:3888 server.4=zk3:2888:3888 server.5=zk4:2888:3888
+    networks:
+      - cerberusntw

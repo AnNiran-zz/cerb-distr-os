@@ -1,0 +1,47 @@
+version: '2'
+  
+volumes:
+  leadpr.cerberusorg.cerberus.net:
+
+networks:
+  cerberusntw:
+
+services:
+  leadpr.cerberusorg.cerberus.net:
+    container_name: leadpr.cerberusorg.cerberus.net
+    extends:
+      file: leadpr.yaml
+      service: leadpr.cerberusorg.cerberus.net
+    networks:
+      - cerberusntw
+
+  cli.leadpr.cerberusorg.cerberus.net:
+    container_name: cli.leadpr.cerberusorg.cerberus.net
+    image: hyperledger/fabric-tools:$IMAGE_TAG
+    tty: true
+    stdin_open: true
+    environment:
+       cd si    - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=cli.leadpr.cerberusorg.cerberus.net
+      - CORE_PEER_ADDRESS=leadpr.cerberusorg.cerberus.net:7051
+      - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/peers/leadpr.cerberusorg.cerberus.net/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/cerberusorg.cerberus.net/users/Admin@cerberusorg.cerberus.net/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./../../../../chaincode/:/opt/gopath/src/github.com/chaincode
+        - ./../../../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./../../../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./../../../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+      - leadpr.cerberusorg.cerberus.net
+    networks:
+      - cerberusntw 

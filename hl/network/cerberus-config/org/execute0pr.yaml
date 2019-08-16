@@ -1,0 +1,29 @@
+version: '2'
+  
+services:
+  execute0pr.cerberusorg.cerberus.net:
+    container_name: execute0pr.cerberusorg.cerberus.net
+    extends:
+      file: ../base/peer-base.yaml
+      service: peer-base
+    environment:
+    - CORE_PEER_ID=execute0pr.cerberusorg.cerberus.net
+    - CORE_PEER_ADDRESS=execute0pr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LISTENADDRESS=0.0.0.0:10013
+    - CORE_PEER_CHAINCODEADDRESS=executed0pr.cerberusorg.cerberus.net:10014
+    - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10014
+    - CORE_PEER_GOSSIP_USELEADERELECTION=false
+    - CORE_PEER_GOSSIP_BOOTSTRAP=communicatepr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchorpr.cerberusorg.cerberus.net:7051
+    - CORE_PEER_LOCALMSPID=CerberusOrgMSP
+    volumes:
+    - /var/run/:/host/var/run/
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/execute0pr.cerberusorg.cerberus.net/msp:/etc/hyperledger/fabric/msp
+    - ../../../crypto-config/peerOrganizations/cerberusorg.cerberus.net/peers/execute0pr.cerberusorg.cerberus.net/tls:/etc/hyperledger/fabric/tls
+    - execute0pr.cerberusorg.cerberus.net:/var/hyperledger/production
+    ports:
+    - 10013:7051
+    - 10014:7052
+    - 10015:7053
+    networks:
+    - cerberusntw

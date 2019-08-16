@@ -1,0 +1,207 @@
+{
+	"comment": "This file contains Ordering Service instances internal structure configuration and is used for managing containers and running instances on each hosts",
+	"myHost": "159.203.35.156",
+	"msp": "OSMSP",
+	"runningOnHost": [
+		{
+			"osInstances": [
+                               {
+                                        "name": "osinstance0",
+                                        "container": "osinstance0.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "osinstance1",
+                                        "container": "osinstance2.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                }
+			],
+			"kafkaInstances": [
+                                {
+                                        "name": "kafka0",
+                                        "container": "kafka0.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "kafka1",
+                                        "container": "kafka1.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+				}
+			]
+		}
+	],
+	"containers": [
+		{
+			"osInstances": [
+				{
+					"name": "osinstance0",
+					"container": "osinstance0.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"name": "osinstance1",
+					"container": "osinstance2.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"name": "osinstance2",
+					"container": "osinstance2.cerberus.net",
+					"host": "111.111.00.00",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"name": "osinstance3",
+					"container": "osinstance3.cerberus.net",
+					"host": "000.111.00.11",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+					"name": "osinstance4",
+					"container": "osinstance4.cerberus.net",
+					"host": "111.00.11.000",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				}
+			],
+			"kafkaInstances": [
+				{
+					"name": "kafka0",
+					"container": "kafka0.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+                                        "name": "kafka1",
+                                        "container": "kafka1.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "kafka2",
+                                        "container": "kafka2.cerberus.net",
+                                        "host": "111.00.000.00",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "kafka3",
+                                        "container": "kafka3.cerberus.net",
+                                        "host": "000.111.00.111",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "kafka4",
+                                        "container": "kafka4.cerberus.net",
+                                        "host": "111.111.111.00",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "kafka5",
+                                        "container": "kafka5.cerberus.net",
+                                        "host": "123.456.789.00",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "kafka6",
+                                        "container": "kafka6.cerberus.net",
+                                        "host": "123.456.789.10",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                }
+			],
+			"zkInstances": [
+				{
+					"name": "zk0",
+					"container": "zk0.cerberus.net",
+					"host": "159.203.35.156",
+					"username": "anniran",
+					"password": "9anna8925lva",
+					"path": "/home/anniran/server/go/src/cerberus-os/"
+				},
+				{
+                                        "name": "zk1",
+                                        "container": "zk1.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "zk2",
+                                        "container": "zk2.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "zk3",
+                                        "container": "zk3.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "zk4",
+                                        "container": "zk4.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "zk5",
+                                        "container": "zk5.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                },
+                                {
+                                        "name": "zk6",
+                                        "container": "zk6.cerberus.net",
+                                        "host": "159.203.35.156",
+                                        "username": "anniran",
+                                        "password": "9anna8925lva",
+                                        "path": "/home/anniran/server/go/src/cerberus-os/"
+                                }
+			]
+		}
+	]
+}
