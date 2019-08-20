@@ -42,25 +42,9 @@
 			]
 		}
 	],
-	"containers": [
+	"runningRemotely": [
 		{
 			"osInstances": [
-				{
-					"name": "osinstance0",
-					"container": "osinstance0.cerberus.net",
-					"host": "159.203.35.156",
-					"username": "anniran",
-					"password": "9anna8925lva",
-					"path": "/home/anniran/server/go/src/cerberus-os/"
-				},
-				{
-					"name": "osinstance1",
-					"container": "osinstance2.cerberus.net",
-					"host": "159.203.35.156",
-					"username": "anniran",
-					"password": "9anna8925lva",
-					"path": "/home/anniran/server/go/src/cerberus-os/"
-				},
 				{
 					"name": "osinstance2",
 					"container": "osinstance2.cerberus.net",
@@ -87,22 +71,6 @@
 				}
 			],
 			"kafkaInstances": [
-				{
-					"name": "kafka0",
-					"container": "kafka0.cerberus.net",
-					"host": "159.203.35.156",
-					"username": "anniran",
-					"password": "9anna8925lva",
-					"path": "/home/anniran/server/go/src/cerberus-os/"
-				},
-				{
-                                        "name": "kafka1",
-                                        "container": "kafka1.cerberus.net",
-                                        "host": "159.203.35.156",
-                                        "username": "anniran",
-                                        "password": "9anna8925lva",
-                                        "path": "/home/anniran/server/go/src/cerberus-os/"
-                                },
                                 {
                                         "name": "kafka2",
                                         "container": "kafka2.cerberus.net",
@@ -148,7 +116,7 @@
 				{
 					"name": "zk0",
 					"container": "zk0.cerberus.net",
-					"host": "159.203.35.156",
+					"host": "159.203.00.1111",
 					"username": "anniran",
 					"password": "9anna8925lva",
 					"path": "/home/anniran/server/go/src/cerberus-os/"
@@ -156,7 +124,7 @@
 				{
                                         "name": "zk1",
                                         "container": "zk1.cerberus.net",
-                                        "host": "159.203.35.156",
+                                        "host": "00.11.001111",
                                         "username": "anniran",
                                         "password": "9anna8925lva",
                                         "path": "/home/anniran/server/go/src/cerberus-os/"

@@ -28,9 +28,13 @@ fi
 
 
 # read cerberusorg configuration file and add environment variables for external services
-bash scripts/cerberus/addCerberusOrgExternalPeersToEnv.sh
+#bash scripts/cerberus/addCerberusOrgExternalPeersToEnv.sh
 
 # read ordering service configuration file and add environment variables for external services
-bash scripts/cerberus/addCerberusOsExternalPeersToEnv.sh
+#bash scripts/cerberus/addCerberusOsExternalPeersToEnv.sh
 
+# read cerberusorg configuration file and add extra hosts for external services
+bash scripts/cerberus/addCerberusOrgExternalPeersToExtraHosts.sh
+
+# read ordering service configuration file and add extra hosts for external services
 echo "hello from the new configuration logic"

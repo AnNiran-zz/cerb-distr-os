@@ -22,23 +22,7 @@
                         "path": "/home/anniran/server/go/src/cerberus-os/"
                 }
 	],
-        "containers": [
-                {
-                        "name": "anchorpr",
-                        "container": "anchorpr.cerberusorg.cerberus.net",
-                        "host" :"159.203.35.156",
-                        "username": "anniran",
-                        "password": "9anna8925lva",
-                        "path": "/home/anniran/server/go/src/cerberus-os/"
-                },
-                {
-                        "name": "leadpr",
-                        "container": "leadpr.cerberusorg.cerberus.net",
-                        "host": "159.203.35.156",
-                        "username": "anniran",
-                        "password": "9anna8925lva",
-                        "path": "/home/anniran/server/go/src/cerberus-os/"
-                },
+        "runningRemotely": [
                 {
                         "name": "communicatepr",
                         "container": "communicatepr.cerberusorg.cerberus.net",

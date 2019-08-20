@@ -34,7 +34,7 @@ fi
 myHostValueStripped=$(echo $myHostValue | sed 's/"//g')
 
 # cerberusorg containers
-cerberusOrgPeers=$(jq -r '.containers[]' $cerberusOrgConfigFile)
+cerberusOrgRemotePeerse=$(jq -r '.runningRemotely[]' $cerberusOrgConfigFile)
 result=$?
 
 if [ $result -ne 0 ]; then
@@ -42,55 +42,49 @@ if [ $result -ne 0 ]; then
 	exit 1
 fi
 
-for peer in $(echo "${cerberusOrgPeers}" | jq -r '. | @base64'); do
+for peer in $(echo "${cerberusOrgRemotePeers}" | jq -r '. | @base64'); do
 	_jq(){
 		peerNameValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${1})\"")
 		peerNameValueStripped=$(echo $peerNameValue | sed 's/"//g')
 		peerNameVar="CERBERUSORG_${peerNameValueStripped^^}_NAME"
 
+		peerContainerValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${2})\"")
+		peerContainerValueStripped=$(echo $peerContainerValue | sed 's/"//g')
+		peerContainerVar="CERBERUSORG_${peerNameValueStripped^^}_CONTAINER"
+
 		peerHostValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${3})\"")
                 peerHostValueStripped=$(echo $peerHostValue | sed 's/"//g')
                 peerHostVar="CERBERUSORG_${peerNameValueStripped^^}_HOST"
+		
+		peerUsernameValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${4})\"")
+		peerUsernameValueStripped=$(echo $peerUsernameValue | sed 's/"//g')
+		peerUsernameVar="CERBERUSORG_${peerNameValueStripped^^}_USERNAME"
 
-		#source .env
+		peerPasswordValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${5})\"")
+		peerPasswordValueStripped=$(echo $peerPasswordValue | sed 's/"//g')
+		peerPasswordVar="CERBERUSORG_${peerNameValueStripped^^}_PASSWORD"
+		
+		peerPathValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${6})\"")
+		peerPathValueStripped=$(echo $peerPathValue | sed 's/"//g')
+		peerPathVar="CERBERUSORG_${peerNameValueStripped^^}_PATH"
 
-		if [ "${peerHostValueStripped}" != "${myHostValueStripped}" ]; then
+		# add peer name
+		addEnvVariable $peerNameValueStripped "CERBERUSORG_${peerNameValueStripped^^}_NAME" "${peerNameVar}"
 
-	                peerContainerValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${2})\"")
-        	        peerContainerValueStripped=$(echo $peerContainerValue | sed 's/"//g')
-                	peerContainerVar="CERBERUSORG_${peerNameValueStripped^^}_CONTAINER"
+		# add peer container
+		addEnvVariable $peerContainerValueStripped "CERBERUSORG_${peerNameValueStripped^^}_CONTAINER" "${!peerContainerVar}"
 
-	                peerUsernameValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${4})\"")
-        	        peerUsernameValueStripped=$(echo $peerUsernameValue | sed 's/"//g')
-                	peerUsernameVar="CERBERUSORG_${peerNameValueStripped^^}_USERNAME"
+		# add peer host
+		addEnvVariable $peerHostValueStripped "CERBERUSORG_${peerNameValueStripped^^}_HOST" "${!peerHostVar}"
 
-	                peerPasswordValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${5})\"")
-        	        peerPasswordValueStripped=$(echo $peerPasswordValue | sed 's/"//g')
-                	peerPasswordVar="CERBERUSORG_${peerNameValueStripped^^}_PASSWORD"
+		# add peer username
+		addEnvVariable $peerUsernameValueStripped "CERBERUSORG_${peerNameValueStripped^^}_USERNAME" "${!peerUsernameVar}"
 
-	                peerPathValue=$(echo "\"$(echo ${peer} | base64 --decode | jq -r ${6})\"")
-        	        peerPathValueStripped=$(echo $peerPathValue | sed 's/"//g')
-                	peerPathVar="CERBERUSORG_${peerNameValueStripped^^}_PATH"
+		# add peer password
+		addEnvVariable $peerPasswordValueStripped "CERBERUSORG_${peerNameValueStripped^^}_PASSWORD" "${!peerPasswordVar}"
 
-			# add peer name
-			addEnvVariable $peerNameValueStripped "CERBERUSORG_${peerNameValueStripped^^}_NAME" "${peerNameVar}"
-
-			# add peer container
-			addEnvVariable $peerContainerValueStripped "CERBERUSORG_${peerNameValueStripped^^}_CONTAINER" "${!peerContainerVar}"
-
-			# add peer host
-			addEnvVariable $peerHostValueStripped "CERBERUSORG_${peerNameValueStripped^^}_HOST" "${!peerHostVar}"
-
-			# add peer username
-			addEnvVariable $peerUsernameValueStripped "CERBERUSORG_${peerNameValueStripped^^}_USERNAME" "${!peerUsernameVar}"
-
-			# add peer password
-			addEnvVariable $peerPasswordValueStripped "CERBERUSORG_${peerNameValueStripped^^}_PASSWORD" "${!peerPasswordVar}"
-
-			# add peer path
-			addEnvVariable $peerPathValueStripped "CERBERUSORG_${peerNameValueStripped^^}_PATH" "${!peerPathVar}"
-
-		fi
+		# add peer path
+		addEnvVariable $peerPathValueStripped "CERBERUSORG_${peerNameValueStripped^^}_PATH" "${!peerPathVar}"
 
 		source .env
 	}
